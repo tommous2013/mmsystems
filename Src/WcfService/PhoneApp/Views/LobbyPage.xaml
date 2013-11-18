@@ -1,0 +1,39 @@
+﻿<phone:PhoneApplicationPage 
+    x:Class="PhoneApp.Views.LobbyPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="800"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait"  Orientation="Portrait"
+    shell:SystemTray.IsVisible="False">
+
+    <Grid x:Name="LayoutRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="70"></RowDefinition>
+            <RowDefinition Height="70"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Margin="12,17,0,28">
+            <TextBlock Text="The Settlers of Catan" Style="{StaticResource PhoneTextNormalStyle}"/>
+            <TextBlock Text="Join a Lobby" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+        </StackPanel>
+        <ListBox Name="LobbyListBox" Grid.Row="1" ItemsSource="{Binding LobbyRoomList}" SelectionChanged="LobbyListBox_SelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock DataContext="{Binding TheLobby}" Text="{Binding LobbyName}"></TextBlock>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button Content="Refresh" Grid.Row="2" Name="LobbyRefreshBtn" Click="LobbyRefreshBtn_Click"></Button>
+        <Button Content="Create New" Grid.Row="3" Name="LobbyCreateNewBtn" Click="LobbyCreateNewBtn_Click" ></Button>
+    </Grid>
+
+</phone:PhoneApplicationPage>

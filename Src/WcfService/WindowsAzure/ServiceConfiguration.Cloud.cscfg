@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfiguration serviceName="WindowsAzure" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="3" osVersion="*" schemaVersion="2013-10.2.2">
+  <Role name="WcfService">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=catan2;AccountKey=sQkwB06BfmCovOGTqw2vKzfQH0NV9lB4pgtTrrHn7m8trhVS9ReM1nIpz56zLO2Wh+SopKO0nO5BuiMfE+gwiw==" />
+    </ConfigurationSettings>
+  </Role>
+</ServiceConfiguration>
