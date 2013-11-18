@@ -68,7 +68,8 @@ namespace PhoneApp.ViewModels
 
         void Client_StartPlayCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
-            
+            (App.Current.RootVisual as PhoneApplicationFrame).Navigate(
+                new Uri("/Views/GamePage.xaml", UriKind.Relative));
         }
     }
 }
