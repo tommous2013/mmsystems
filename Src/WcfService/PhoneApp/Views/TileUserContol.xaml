@@ -10,8 +10,8 @@
     d:DesignHeight="100" d:DesignWidth="100">
     
     <Grid x:Name="LayoutRoot">
-        <Image x:Name="HexImg" Width="100" Height="100" Source="{Binding HexSource}"></Image>
-        <Image x:Name="NumImg" Width="100" Height="100" Source="{Binding NumSource}"></Image>
+        <Image x:Name="HexSource" Width="100" Height="100" ></Image>
+        <Image x:Name="NumSource" Width="100" Height="100" ></Image>
     </Grid>
     
 </UserControl>

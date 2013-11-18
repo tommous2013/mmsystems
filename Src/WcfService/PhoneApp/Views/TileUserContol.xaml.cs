@@ -18,8 +18,8 @@ namespace PhoneApp.Views
         public TileUserContol(string resource, int num)
         {
             InitializeComponent();
-            HexSource = new BitmapImage(new Uri("Images/Resources/" + resource + ".png", UriKind.Relative));
-            NumSource = new BitmapImage(new Uri("Images/Numbers/" + num + ".png", UriKind.Relative));
+            HexSource.Source = new BitmapImage(new Uri("/Images/Map/" + resource + ".png", UriKind.Relative));
+            NumSource.Source = new BitmapImage(new Uri("/Images/Nums/" + num + ".png", UriKind.Relative));
             TileNum = num;
             Resource = resource;
         }
@@ -43,40 +43,6 @@ namespace PhoneApp.Views
             {
                 _resource = value;
                 //OnPropertyChanged("Resource");
-            }
-        }
-
-        private BitmapImage _hexSource;
-        public BitmapImage HexSource
-        {
-            get { return _hexSource; }
-            set
-            {
-                _hexSource = value;
-                OnPropertyChanged("HexSource");
-            }
-        }
-
-        private BitmapImage _numSource;
-        public BitmapImage NumSource
-        {
-            get { return _numSource; }
-            set
-            {
-                _numSource = value;
-                OnPropertyChanged("NumSource");
-            }
-        }
-
-
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }

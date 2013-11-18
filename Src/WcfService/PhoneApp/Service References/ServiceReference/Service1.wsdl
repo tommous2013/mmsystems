@@ -37,12 +37,6 @@
   <wsdl:message name="IService1_SubscribeToLobbyRoom_OutputMessage">
     <wsdl:part name="parameters" element="tns:SubscribeToLobbyRoomResponse" />
   </wsdl:message>
-  <wsdl:message name="IService1_GetPlayer_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetPlayer" />
-  </wsdl:message>
-  <wsdl:message name="IService1_GetPlayer_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetPlayerResponse" />
-  </wsdl:message>
   <wsdl:message name="IService1_MakePlayer_InputMessage">
     <wsdl:part name="parameters" element="tns:MakePlayer" />
   </wsdl:message>
@@ -69,10 +63,6 @@
     <wsdl:operation name="SubscribeToLobbyRoom">
       <wsdl:input wsaw:Action="http://tempuri.org/IService1/SubscribeToLobbyRoom" message="tns:IService1_SubscribeToLobbyRoom_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IService1/SubscribeToLobbyRoomResponse" message="tns:IService1_SubscribeToLobbyRoom_OutputMessage" />
-    </wsdl:operation>
-    <wsdl:operation name="GetPlayer">
-      <wsdl:input wsaw:Action="http://tempuri.org/IService1/GetPlayer" message="tns:IService1_GetPlayer_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IService1/GetPlayerResponse" message="tns:IService1_GetPlayer_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="MakePlayer">
       <wsdl:input wsaw:Action="http://tempuri.org/IService1/MakePlayer" message="tns:IService1_MakePlayer_InputMessage" />
@@ -119,15 +109,6 @@
     </wsdl:operation>
     <wsdl:operation name="SubscribeToLobbyRoom">
       <soap:operation soapAction="http://tempuri.org/IService1/SubscribeToLobbyRoom" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetPlayer">
-      <soap:operation soapAction="http://tempuri.org/IService1/GetPlayer" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

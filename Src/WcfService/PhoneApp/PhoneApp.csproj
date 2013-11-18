@@ -72,10 +72,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\GamePageViewModel.cs" />
     <Compile Include="ViewModels\LobbyPageViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
-    <Compile Include="ViewModels\TileViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\WaitingPageViewModel.cs" />
     <Compile Include="Views\GamePage.xaml.cs">

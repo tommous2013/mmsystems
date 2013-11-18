@@ -94,13 +94,13 @@ namespace WcfService
 
         public void StartPlay(OPlayer hostPlayer)
         {
-            var lst = from l in dc.PlayLobbies
+            var lst = (from l in dc.PlayLobbies
                       where l.HostPlayer == hostPlayer.PlayerId
-                      select new { l.LobbyId };
+                      select new { l.LobbyId }).First();
 
             var update = (from l in dc.Lobbies
-                          where l.LobbyId == lst.Single().LobbyId
-                          select l).Single();
+                          where l.LobbyId == lst.LobbyId
+                          select l).First();
             update.IsWaitingForPlayers = false;
             dc.SubmitChanges();
 
@@ -127,7 +127,14 @@ namespace WcfService
 
             if (q.Count() >= 4)
             {
-                StartPlay(lobby.HostPlayer);
+
+                //StartPlay(lobby.HostPlayer);
+
+                var update = (from l in dc.Lobbies
+                              where l.LobbyId == lobby.TheLobby.LobbyId
+                              select l).Single();
+                update.IsWaitingForPlayers = false;
+                dc.SubmitChanges();
 
             }
         }

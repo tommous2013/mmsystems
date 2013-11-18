@@ -8,7 +8,7 @@ using PhoneApp.ServiceReference;
 
 namespace PhoneApp.ViewModels
 {
-    class MainPageViewModel : ViewModelBase
+    public class MainPageViewModel : ViewModelBase
     {
         public MainPageViewModel()
         {

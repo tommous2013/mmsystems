@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
@@ -25,8 +26,8 @@ namespace PhoneApp.Views
             Shuffle.ShuffleIt(_numArray, App.LobbyRoom.TheLobby.LobbyId);
             _hexArray = new string[]
                 {
-                    "brick", "brick", "brick", "brick", "ironOre", "ironOre", "ironOre", "sheep", "sheep", "sheep", "sheep"
-                    , "wood", "wood", "wood", "wood", "grain", "grain", "grain", "grain"
+                    "Brick", "Brick", "Brick", "Brick", "IronOre", "IronOre", "IronOre", "Sheep", "Sheep", "Sheep", "Sheep"
+                    , "Wood", "Wood", "Wood", "Wood", "Grain", "Grain", "Grain", "Grain"
                 };
             Shuffle.ShuffleIt(_hexArray, App.LobbyRoom.TheLobby.LobbyId);
 
@@ -103,7 +104,9 @@ namespace PhoneApp.Views
                 };
             # endregion
 
-            
+            GenGameMap();
+
+
         }
 
         public void GenGameMap()

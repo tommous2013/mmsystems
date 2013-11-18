@@ -194,11 +194,6 @@ namespace PhoneApp.ServiceReference {
         
         void EndSubscribeToLobbyRoom(System.IAsyncResult result);
         
-        [System.ServiceModel.OperationContractAttribute(AsyncPattern=true, Action="http://tempuri.org/IService1/GetPlayer", ReplyAction="http://tempuri.org/IService1/GetPlayerResponse")]
-        System.IAsyncResult BeginGetPlayer(int id, System.AsyncCallback callback, object asyncState);
-        
-        PhoneApp.ServiceReference.OPlayer EndGetPlayer(System.IAsyncResult result);
-        
         [System.ServiceModel.OperationContractAttribute(AsyncPattern=true, Action="http://tempuri.org/IService1/MakePlayer", ReplyAction="http://tempuri.org/IService1/MakePlayerResponse")]
         System.IAsyncResult BeginMakePlayer(string username, System.AsyncCallback callback, object asyncState);
         
@@ -268,25 +263,6 @@ namespace PhoneApp.ServiceReference {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class GetPlayerCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
-        
-        private object[] results;
-        
-        public GetPlayerCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
-                base(exception, cancelled, userState) {
-            this.results = results;
-        }
-        
-        public PhoneApp.ServiceReference.OPlayer Result {
-            get {
-                base.RaiseExceptionIfNecessary();
-                return ((PhoneApp.ServiceReference.OPlayer)(this.results[0]));
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public partial class MakePlayerCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
         
         private object[] results;
@@ -337,12 +313,6 @@ namespace PhoneApp.ServiceReference {
         private EndOperationDelegate onEndSubscribeToLobbyRoomDelegate;
         
         private System.Threading.SendOrPostCallback onSubscribeToLobbyRoomCompletedDelegate;
-        
-        private BeginOperationDelegate onBeginGetPlayerDelegate;
-        
-        private EndOperationDelegate onEndGetPlayerDelegate;
-        
-        private System.Threading.SendOrPostCallback onGetPlayerCompletedDelegate;
         
         private BeginOperationDelegate onBeginMakePlayerDelegate;
         
@@ -412,8 +382,6 @@ namespace PhoneApp.ServiceReference {
         public event System.EventHandler<System.ComponentModel.AsyncCompletedEventArgs> StartPlayCompleted;
         
         public event System.EventHandler<System.ComponentModel.AsyncCompletedEventArgs> SubscribeToLobbyRoomCompleted;
-        
-        public event System.EventHandler<GetPlayerCompletedEventArgs> GetPlayerCompleted;
         
         public event System.EventHandler<MakePlayerCompletedEventArgs> MakePlayerCompleted;
         
@@ -648,52 +616,6 @@ namespace PhoneApp.ServiceReference {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.IAsyncResult PhoneApp.ServiceReference.IService1.BeginGetPlayer(int id, System.AsyncCallback callback, object asyncState) {
-            return base.Channel.BeginGetPlayer(id, callback, asyncState);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        PhoneApp.ServiceReference.OPlayer PhoneApp.ServiceReference.IService1.EndGetPlayer(System.IAsyncResult result) {
-            return base.Channel.EndGetPlayer(result);
-        }
-        
-        private System.IAsyncResult OnBeginGetPlayer(object[] inValues, System.AsyncCallback callback, object asyncState) {
-            int id = ((int)(inValues[0]));
-            return ((PhoneApp.ServiceReference.IService1)(this)).BeginGetPlayer(id, callback, asyncState);
-        }
-        
-        private object[] OnEndGetPlayer(System.IAsyncResult result) {
-            PhoneApp.ServiceReference.OPlayer retVal = ((PhoneApp.ServiceReference.IService1)(this)).EndGetPlayer(result);
-            return new object[] {
-                    retVal};
-        }
-        
-        private void OnGetPlayerCompleted(object state) {
-            if ((this.GetPlayerCompleted != null)) {
-                InvokeAsyncCompletedEventArgs e = ((InvokeAsyncCompletedEventArgs)(state));
-                this.GetPlayerCompleted(this, new GetPlayerCompletedEventArgs(e.Results, e.Error, e.Cancelled, e.UserState));
-            }
-        }
-        
-        public void GetPlayerAsync(int id) {
-            this.GetPlayerAsync(id, null);
-        }
-        
-        public void GetPlayerAsync(int id, object userState) {
-            if ((this.onBeginGetPlayerDelegate == null)) {
-                this.onBeginGetPlayerDelegate = new BeginOperationDelegate(this.OnBeginGetPlayer);
-            }
-            if ((this.onEndGetPlayerDelegate == null)) {
-                this.onEndGetPlayerDelegate = new EndOperationDelegate(this.OnEndGetPlayer);
-            }
-            if ((this.onGetPlayerCompletedDelegate == null)) {
-                this.onGetPlayerCompletedDelegate = new System.Threading.SendOrPostCallback(this.OnGetPlayerCompleted);
-            }
-            base.InvokeAsync(this.onBeginGetPlayerDelegate, new object[] {
-                        id}, this.onEndGetPlayerDelegate, this.onGetPlayerCompletedDelegate, userState);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         System.IAsyncResult PhoneApp.ServiceReference.IService1.BeginMakePlayer(string username, System.AsyncCallback callback, object asyncState) {
             return base.Channel.BeginMakePlayer(username, callback, asyncState);
         }
@@ -875,19 +797,6 @@ namespace PhoneApp.ServiceReference {
             public void EndSubscribeToLobbyRoom(System.IAsyncResult result) {
                 object[] _args = new object[0];
                 base.EndInvoke("SubscribeToLobbyRoom", _args, result);
-            }
-            
-            public System.IAsyncResult BeginGetPlayer(int id, System.AsyncCallback callback, object asyncState) {
-                object[] _args = new object[1];
-                _args[0] = id;
-                System.IAsyncResult _result = base.BeginInvoke("GetPlayer", _args, callback, asyncState);
-                return _result;
-            }
-            
-            public PhoneApp.ServiceReference.OPlayer EndGetPlayer(System.IAsyncResult result) {
-                object[] _args = new object[0];
-                PhoneApp.ServiceReference.OPlayer _result = ((PhoneApp.ServiceReference.OPlayer)(base.EndInvoke("GetPlayer", _args, result)));
-                return _result;
             }
             
             public System.IAsyncResult BeginMakePlayer(string username, System.AsyncCallback callback, object asyncState) {

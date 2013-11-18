@@ -23,6 +23,7 @@
         </Grid.RowDefinitions>
 
        <Canvas x:Name="Can"></Canvas>
+        <Image x:Name="Img" Grid.Row="1"></Image>
            
       
 

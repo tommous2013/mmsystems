@@ -22,13 +22,18 @@ namespace PhoneApp.Views
         {
             InitializeComponent();
             vm = new LobbyPageViewModel();
-            this.DataContext = vm;
+            
             LobbyRefreshBtn_Click(null, null);
+            
+            //LobbyListBox.Items.Add("test");
         }
 
         private void LobbyRefreshBtn_Click(object sender, RoutedEventArgs e)
         {
+
+            vm.PopDone += (s, ea) => this.DataContext = vm;
             vm.PopulateLobbyList();
+        
         }
 
         private void LobbyListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

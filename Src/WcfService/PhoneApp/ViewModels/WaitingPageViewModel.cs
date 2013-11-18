@@ -9,7 +9,7 @@ using PhoneApp.ServiceReference;
 
 namespace PhoneApp.ViewModels
 {
-    class WaitingPageViewModel : ViewModelBase
+    public class WaitingPageViewModel : ViewModelBase
     {
         public WaitingPageViewModel()
         {
@@ -47,22 +47,30 @@ namespace PhoneApp.ViewModels
 
         void Client_GetAvailableLobbyRoomsCompleted(object sender, GetAvailableLobbyRoomsCompletedEventArgs e)
         {
-            var q = (from room in e.Result
-                     where room.TheLobby.LobbyId == App.LobbyRoom.TheLobby.LobbyId
-                     select room).First();
+            try
+            {
+                var q = (from room in e.Result
+                         where room.TheLobby.LobbyId == App.LobbyRoom.TheLobby.LobbyId
+                         select room).First();
 
-            App.LobbyRoom = q;
-            if (PlayerList != null && PlayerList.Count >= 4)
+                App.LobbyRoom = q;
+                if (PlayerList != null && PlayerList.Count >= 4)
+                {
+                    StartGame();
+                }
+                PlayerList = q.PlayerList;
+            }
+            catch (Exception)
             {
                 StartGame();
             }
-            PlayerList = q.PlayerList;
+
         }
 
         public void StartGame()
         {
             App.Client.StartPlayCompleted += Client_StartPlayCompleted;
-            App.Client.StartPlayAsync(App.Me);
+            App.Client.StartPlayAsync(App.LobbyRoom.HostPlayer);
 
         }
 

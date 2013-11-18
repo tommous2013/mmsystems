@@ -9,11 +9,12 @@ using PhoneApp.ServiceReference;
 
 namespace PhoneApp.ViewModels
 {
-    class LobbyPageViewModel : ViewModelBase
+   public class LobbyPageViewModel : ViewModelBase
     {
         public LobbyPageViewModel()
         {
             App.Client = new Service1Client();
+            LobbyRoomList = new ObservableCollection<OLobbyRoom>();
         }
 
         private ObservableCollection<OLobbyRoom> _lobbyRoomList;
@@ -30,10 +31,18 @@ namespace PhoneApp.ViewModels
             }
         }
 
+        public event EventHandler PopDone;
         public void PopulateLobbyList()
         {
-            App.Client.GetAvailableLobbyRoomsCompleted += (s, e) => { LobbyRoomList = e.Result; };
+            App.Client.GetAvailableLobbyRoomsCompleted += Client_GetAvailableLobbyRoomsCompleted;
             App.Client.GetAvailableLobbyRoomsAsync();
+        }
+
+        void Client_GetAvailableLobbyRoomsCompleted(object sender, GetAvailableLobbyRoomsCompletedEventArgs e)
+        {
+            { LobbyRoomList = e.Result; };
+            if(PopDone!=null)
+                PopDone(this, EventArgs.Empty);
         }
 
         public void JoinLobby(OLobbyRoom lr)
