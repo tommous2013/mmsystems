@@ -15,6 +15,12 @@ namespace WcfService.DTO
         [DataMember]
         public string LobbyName { get; set; }
 
+        [DataMember]
+        public bool IsWaitingForPlayers { get; set; }
+
+        [DataMember]
+        public int DiceNum { get; set; }
+
         public override string ToString()
         {
             return LobbyName;

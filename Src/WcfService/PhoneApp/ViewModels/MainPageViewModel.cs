@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using PhoneApp.ServiceReference;
@@ -31,8 +32,16 @@ namespace PhoneApp.ViewModels
 
         public void Login()
         {
-            App.Client.MakePlayerCompleted += client_MakePlayerCompleted;
-            App.Client.MakePlayerAsync(PlayerName);
+            try
+            {
+                App.Client.MakePlayerCompleted += client_MakePlayerCompleted;
+                App.Client.MakePlayerAsync(PlayerName);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Connection error");
+            }
+
 
         }
 

@@ -7,7 +7,7 @@
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
-    d:DesignHeight="100" d:DesignWidth="100">
+    d:DesignHeight="500" d:DesignWidth="500">
     
     <Grid x:Name="LayoutRoot">
         <Image x:Name="HexSource" Width="100" Height="100" ></Image>

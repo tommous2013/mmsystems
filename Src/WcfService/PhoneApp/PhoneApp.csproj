@@ -65,6 +65,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\BuildStatusEnum.cs" />
     <Compile Include="Models\Settlement.cs" />
     <Compile Include="Models\Shuffle.cs" />
     <Compile Include="Service References\ServiceReference\Reference.cs">
@@ -157,6 +158,26 @@
     <Content Include="Images\Nums\7.png" />
     <Content Include="Images\Nums\8.png" />
     <Content Include="Images\Nums\9.png" />
+    <Content Include="Images\Pieces\City\CityBlue.png" />
+    <Content Include="Images\Pieces\City\CityOrange.png" />
+    <Content Include="Images\Pieces\City\CityRed.png" />
+    <Content Include="Images\Pieces\City\CityWhite.png" />
+    <Content Include="Images\Pieces\Road\RoadBlue1.png" />
+    <Content Include="Images\Pieces\Road\RoadBlue2.png" />
+    <Content Include="Images\Pieces\Road\RoadBlue3.png" />
+    <Content Include="Images\Pieces\Road\RoadOrange1.png" />
+    <Content Include="Images\Pieces\Road\RoadOrange2.png" />
+    <Content Include="Images\Pieces\Road\RoadOrange3.png" />
+    <Content Include="Images\Pieces\Road\RoadRed1.png" />
+    <Content Include="Images\Pieces\Road\RoadRed2.png" />
+    <Content Include="Images\Pieces\Road\RoadRed3.png" />
+    <Content Include="Images\Pieces\Road\RoadWhite1.png" />
+    <Content Include="Images\Pieces\Road\RoadWhite2.png" />
+    <Content Include="Images\Pieces\Road\RoadWhite3.png" />
+    <Content Include="Images\Pieces\Settlement\SettlementBlue.png" />
+    <Content Include="Images\Pieces\Settlement\SettlementOrange.png" />
+    <Content Include="Images\Pieces\Settlement\SettlementRed.png" />
+    <Content Include="Images\Pieces\Settlement\SettlementWhite.png" />
     <Content Include="ServiceReferences.ClientConfig" />
     <None Include="Service References\ServiceReference\Service1.wsdl" />
     <None Include="Service References\ServiceReference\Service1.xsd">
@@ -181,9 +202,7 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Images\Pieces\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\ServiceReference\" />
   </ItemGroup>

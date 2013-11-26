@@ -18,6 +18,9 @@ namespace WcfService
 
         [OperationContract]
         List<OLobby> GetAvailableLobbies();
+        
+        [OperationContract]
+        OLobbyRoom GetALobbyRoom(OLobby lob);
 
         [OperationContract]
         List<OLobbyRoom> GetAvailableLobbyRooms();
@@ -33,5 +36,8 @@ namespace WcfService
 
         [OperationContract]
         OPlayer MakePlayer(string username);
+
+        [OperationContract]
+        void ChangeTurn(OLobbyRoom lobbyRoom);
     }
 }

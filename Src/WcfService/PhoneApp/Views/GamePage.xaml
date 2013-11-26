@@ -22,11 +22,123 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-       <Canvas x:Name="Can"></Canvas>
-        <Image x:Name="Img" Grid.Row="1"></Image>
-           
-      
+        <Canvas x:Name="Can" Tap="Can_Tap"></Canvas>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Row="0" Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Row="0" Grid.Column="0">
+                    <TextBlock Text="{Binding PlayerName}"></TextBlock>
+                    <TextBlock Text="{Binding Wood}"></TextBlock>
+                    <TextBlock Text="{Binding Brick}"></TextBlock>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="1">
+                    <TextBlock Text="{Binding Grain}"></TextBlock>
+                    <TextBlock Text="{Binding IronOre}"></TextBlock>
+                    <TextBlock Text="{Binding Sheep}"></TextBlock>
+                </StackPanel>
+            </Grid>
+
+
+            <StackPanel x:Name="Player2Stkpnl" Grid.Row="0" Grid.Column="2">
+                <TextBlock Text="{Binding PlayerName}"></TextBlock>
+                <TextBlock Text="{Binding Wood}"></TextBlock>
+                <TextBlock Text="{Binding Brick}"></TextBlock>
+                <TextBlock Text="{Binding Grain}"></TextBlock>
+                <TextBlock Text="{Binding IronOre}"></TextBlock>
+                <TextBlock Text="{Binding Sheep}"></TextBlock>
+            </StackPanel>
+
+            <StackPanel x:Name="Player3Stkpnl" Grid.Row="1" Grid.Column="0">
+                <TextBlock Text="{Binding PlayerName}"></TextBlock>
+                <TextBlock Text="{Binding Wood}"></TextBlock>
+                <TextBlock Text="{Binding Brick}"></TextBlock>
+                <TextBlock Text="{Binding Grain}"></TextBlock>
+                <TextBlock Text="{Binding IronOre}"></TextBlock>
+                <TextBlock Text="{Binding Sheep}"></TextBlock>
+            </StackPanel>
+
+            <StackPanel x:Name="Player4Stkpnl" Grid.Row="1" Grid.Column="2">
+                <TextBlock Text="{Binding PlayerName}"></TextBlock>
+                <TextBlock Text="{Binding Wood}"></TextBlock>
+                <TextBlock Text="{Binding Brick}"></TextBlock>
+                <TextBlock Text="{Binding Grain}"></TextBlock>
+                <TextBlock Text="{Binding IronOre}"></TextBlock>
+                <TextBlock Text="{Binding Sheep}"></TextBlock>
+            </StackPanel>
+
+
+        </Grid>
+        <Popup x:Name="BuildPopup" Margin="10" Grid.Row="0" >
+            <Border BorderThickness="2" BorderBrush="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Stretch">
+            <StackPanel Background="DimGray" HorizontalAlignment="Center">
+                    <TextBlock Text="Building Costs" TextAlignment="Center" FontSize="40" Margin="10,0" />
+                    <StackPanel Orientation="Vertical" Margin="0,10">
+                        <StackPanel Orientation="Horizontal" Background="Gray" HorizontalAlignment="Center" Margin="10">
+                            <TextBlock VerticalAlignment="Center" Text="Road" Margin="5"></TextBlock>
+                            <StackPanel VerticalAlignment="Center" Margin="5">
+                                <TextBlock Text="1 x Wood"></TextBlock>
+                                <TextBlock Text="1 x Brick"></TextBlock>
+                            </StackPanel>
+                            <Button Content="Buy" Click="Buy_Road_Click"></Button>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Background="Gray" HorizontalAlignment="Center" Margin="10">
+                            <TextBlock VerticalAlignment="Center" Text="Settlement" Margin="5"></TextBlock>
+                            <StackPanel VerticalAlignment="Center" Margin="5">
+                                <TextBlock Text="1 x Wood"></TextBlock>
+                                <TextBlock Text="1 x Brick"></TextBlock>
+                            </StackPanel>
+                            <StackPanel VerticalAlignment="Center" Margin="5">
+                                <TextBlock Text="1 x Sheep"></TextBlock>
+                                <TextBlock Text="1 x Wheat"></TextBlock>
+                            </StackPanel>
+                            <Button Content="Buy" Click="Buy_Settlement_Click"></Button>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Background="Gray" HorizontalAlignment="Center" Margin="10">
+                            <TextBlock VerticalAlignment="Center" Text="City" Margin="5"></TextBlock>
+                            <StackPanel VerticalAlignment="Center" Margin="5">
+                                <TextBlock Text="2 x Wheat"></TextBlock>
+                                <TextBlock Text="3 x IronOre"></TextBlock>
+                            </StackPanel>
+                            <Button Content="Buy" Click="Buy_City_Click"></Button>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Background="Gray" HorizontalAlignment="Center" Margin="10">
+                            <TextBlock VerticalAlignment="Center" Text="Development Card" Margin="5"></TextBlock>
+                            <StackPanel VerticalAlignment="Center" Margin="5">
+                                <TextBlock Text="1 x Wheat"></TextBlock>
+                                <TextBlock Text="1 x Sheep"></TextBlock>
+                                <TextBlock Text="1 x IronOre"></TextBlock>
+                            </StackPanel>
+                            <Button Content="Buy" Click="Buy_Dev_Click" IsEnabled="False"></Button> <!--nog niet geimplimenteerd--> 
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Popup>
+
 
     </Grid>
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar x:Name="AppBar" IsVisible="True" IsMenuEnabled="false">
+            <shell:ApplicationBarIconButton x:Name="Fin" IconUri="/Images/appbar_button1.png" Text="Finished" Click="Fin_Click" />
+            <shell:ApplicationBarIconButton x:Name="Build" IconUri="/Images/appbar_button2.png" Text="Build" Click="Build_Click"/>
+            <!--<shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="MenuItem 1"/>
+                <shell:ApplicationBarMenuItem Text="MenuItem 2"/>
+            </shell:ApplicationBar.MenuItems>-->
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
 
 </phone:PhoneApplicationPage>

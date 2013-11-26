@@ -19,6 +19,12 @@
   <wsdl:message name="IService1_GetAvailableLobbies_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetAvailableLobbiesResponse" />
   </wsdl:message>
+  <wsdl:message name="IService1_GetALobbyRoom_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetALobbyRoom" />
+  </wsdl:message>
+  <wsdl:message name="IService1_GetALobbyRoom_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetALobbyRoomResponse" />
+  </wsdl:message>
   <wsdl:message name="IService1_GetAvailableLobbyRooms_InputMessage">
     <wsdl:part name="parameters" element="tns:GetAvailableLobbyRooms" />
   </wsdl:message>
@@ -43,6 +49,12 @@
   <wsdl:message name="IService1_MakePlayer_OutputMessage">
     <wsdl:part name="parameters" element="tns:MakePlayerResponse" />
   </wsdl:message>
+  <wsdl:message name="IService1_ChangeTurn_InputMessage">
+    <wsdl:part name="parameters" element="tns:ChangeTurn" />
+  </wsdl:message>
+  <wsdl:message name="IService1_ChangeTurn_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ChangeTurnResponse" />
+  </wsdl:message>
   <wsdl:portType name="IService1">
     <wsdl:operation name="CreateLobby">
       <wsdl:input wsaw:Action="http://tempuri.org/IService1/CreateLobby" message="tns:IService1_CreateLobby_InputMessage" />
@@ -51,6 +63,10 @@
     <wsdl:operation name="GetAvailableLobbies">
       <wsdl:input wsaw:Action="http://tempuri.org/IService1/GetAvailableLobbies" message="tns:IService1_GetAvailableLobbies_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IService1/GetAvailableLobbiesResponse" message="tns:IService1_GetAvailableLobbies_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetALobbyRoom">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService1/GetALobbyRoom" message="tns:IService1_GetALobbyRoom_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService1/GetALobbyRoomResponse" message="tns:IService1_GetALobbyRoom_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="GetAvailableLobbyRooms">
       <wsdl:input wsaw:Action="http://tempuri.org/IService1/GetAvailableLobbyRooms" message="tns:IService1_GetAvailableLobbyRooms_InputMessage" />
@@ -68,6 +84,10 @@
       <wsdl:input wsaw:Action="http://tempuri.org/IService1/MakePlayer" message="tns:IService1_MakePlayer_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IService1/MakePlayerResponse" message="tns:IService1_MakePlayer_OutputMessage" />
     </wsdl:operation>
+    <wsdl:operation name="ChangeTurn">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService1/ChangeTurn" message="tns:IService1_ChangeTurn_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService1/ChangeTurnResponse" message="tns:IService1_ChangeTurn_OutputMessage" />
+    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IService1" type="tns:IService1">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
@@ -82,6 +102,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetAvailableLobbies">
       <soap:operation soapAction="http://tempuri.org/IService1/GetAvailableLobbies" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetALobbyRoom">
+      <soap:operation soapAction="http://tempuri.org/IService1/GetALobbyRoom" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -118,6 +147,15 @@
     </wsdl:operation>
     <wsdl:operation name="MakePlayer">
       <soap:operation soapAction="http://tempuri.org/IService1/MakePlayer" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangeTurn">
+      <soap:operation soapAction="http://tempuri.org/IService1/ChangeTurn" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

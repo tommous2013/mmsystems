@@ -40,10 +40,34 @@ namespace WcfService
 
             return new OLobbyRoom()
                 {
-                    HostPlayer = host, 
-                    PlayerList = new List<OPlayer>(){host},
-                    TheLobby = new OLobby(){LobbyId = lobby.LobbyId,LobbyName = lobby.LobbyName}
+                    HostPlayer = host,
+                    PlayerList = new List<OPlayer>() { host },
+                    TheLobby = new OLobby() { LobbyId = lobby.LobbyId, LobbyName = lobby.LobbyName }
                 };
+        }
+
+        public OLobbyRoom GetALobbyRoom(OLobby lob)
+        {
+            OLobbyRoom result = new OLobbyRoom();
+            var qlob = (from lobby in dc.Lobbies
+                       where lobby.LobbyId == lob.LobbyId
+                       select lobby).First();
+            result.TheLobby = new OLobby(){IsWaitingForPlayers = (bool)qlob.IsWaitingForPlayers, LobbyId = qlob.LobbyId, LobbyName = qlob.LobbyName};
+            var qplayer = from player in dc.Players
+                          join playLobby in dc.PlayLobbies on player.PlayerId equals playLobby.PlayerId
+                          where playLobby.LobbyId == lob.LobbyId
+                          select player;
+            result.PlayerList = new List<OPlayer>();
+            foreach (Player player in qplayer)
+            {
+                result.PlayerList.Add(new OPlayer(){MyTurn = player.MyTurn,PlayerId = player.PlayerId, PlayerName = player.PlayerName,Color = player.Color, Brick = player.Brick, Wheat = player.Wheat, IronOre = player.IronOre, Sheep = player.Sheep, Wood = player.Wood});
+            }
+            var qhost = (from oPlayer in result.PlayerList
+                        join playLobby in dc.PlayLobbies on oPlayer.PlayerId equals playLobby.PlayerId
+                        where oPlayer.PlayerId == playLobby.HostPlayer && playLobby.LobbyId == lob.LobbyId
+                        select oPlayer).First();
+            result.HostPlayer = qhost;
+            return result;
         }
 
         public List<OLobby> GetAvailableLobbies()
@@ -63,9 +87,8 @@ namespace WcfService
         public List<OLobbyRoom> GetAvailableLobbyRooms()
         {
             var result = from l in dc.Lobbies
-                         where l.IsWaitingForPlayers == true
                          select l;
-            
+
             var list = new List<OLobbyRoom>();
             foreach (var item in result)
             {
@@ -84,7 +107,7 @@ namespace WcfService
                 var lr = new OLobbyRoom()
                     {
                         HostPlayer = new OPlayer() { PlayerId = (int)plies.First().HostPlayer },
-                        TheLobby = new OLobby() { LobbyId = item.LobbyId, LobbyName = item.LobbyName },
+                        TheLobby = new OLobby() { LobbyId = item.LobbyId, LobbyName = item.LobbyName, IsWaitingForPlayers = (bool)item.IsWaitingForPlayers },
                         PlayerList = pList
                     };
                 list.Add(lr);
@@ -95,8 +118,8 @@ namespace WcfService
         public void StartPlay(OPlayer hostPlayer)
         {
             var lst = (from l in dc.PlayLobbies
-                      where l.HostPlayer == hostPlayer.PlayerId
-                      select new { l.LobbyId }).First();
+                       where l.HostPlayer == hostPlayer.PlayerId
+                       select new { l.LobbyId }).First();
 
             var update = (from l in dc.Lobbies
                           where l.LobbyId == lst.LobbyId
@@ -165,6 +188,32 @@ namespace WcfService
             {
 
                 throw;
+            }
+
+        }
+
+        public void ChangeTurn(OLobbyRoom lobbyRoom)
+        {
+            var q = from oPlayer in lobbyRoom.PlayerList
+                    where oPlayer.MyTurn == true
+                    select oPlayer;
+
+            for (int i = 0; i < lobbyRoom.PlayerList.Count; i++)
+            {
+                if (lobbyRoom.PlayerList.ElementAt(i).MyTurn)
+                {
+                    lobbyRoom.PlayerList.ElementAt(i).MyTurn = false;
+                    if (++i >3)
+                    {
+                        lobbyRoom.PlayerList.ElementAt(0).MyTurn = true;
+                    }
+                    else
+                    {
+                        lobbyRoom.PlayerList.ElementAt(++i).MyTurn = true;
+                    }
+                    
+                }
+                
             }
 
         }

@@ -40,7 +40,14 @@ namespace PhoneApp.ViewModels
 
         void Client_GetAvailableLobbyRoomsCompleted(object sender, GetAvailableLobbyRoomsCompletedEventArgs e)
         {
-            { LobbyRoomList = e.Result; };
+            var q = from room in e.Result
+                            where room.TheLobby.IsWaitingForPlayers == true
+                            select room;
+            LobbyRoomList.Clear();
+            foreach (OLobbyRoom room in q)
+            {
+                LobbyRoomList.Add(room);
+            }
             if(PopDone!=null)
                 PopDone(this, EventArgs.Empty);
         }

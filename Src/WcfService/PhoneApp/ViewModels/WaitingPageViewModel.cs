@@ -56,13 +56,14 @@ namespace PhoneApp.ViewModels
                 App.LobbyRoom = q;
                 if (PlayerList != null && PlayerList.Count >= 4)
                 {
-                    StartGame();
+                    (App.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri("/Views/GamePage.xaml", UriKind.Relative));
+                    //StartGame();
                 }
                 PlayerList = q.PlayerList;
             }
             catch (Exception)
             {
-                StartGame();
+                throw;
             }
 
         }

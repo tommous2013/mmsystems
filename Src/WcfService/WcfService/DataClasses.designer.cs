@@ -30,12 +30,15 @@ namespace WcfService
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
-    partial void InsertPlayer(Player instance);
-    partial void UpdatePlayer(Player instance);
-    partial void DeletePlayer(Player instance);
     partial void InsertPlayLobby(PlayLobby instance);
     partial void UpdatePlayLobby(PlayLobby instance);
     partial void DeletePlayLobby(PlayLobby instance);
+    partial void InsertPlayer(Player instance);
+    partial void UpdatePlayer(Player instance);
+    partial void DeletePlayer(Player instance);
+    partial void InsertSettlement(Settlement instance);
+    partial void UpdateSettlement(Settlement instance);
+    partial void DeleteSettlement(Settlement instance);
     partial void InsertLobby(Lobby instance);
     partial void UpdateLobby(Lobby instance);
     partial void DeleteLobby(Lobby instance);
@@ -71,14 +74,6 @@ namespace WcfService
 			OnCreated();
 		}
 		
-		public System.Data.Linq.Table<Player> Players
-		{
-			get
-			{
-				return this.GetTable<Player>();
-			}
-		}
-		
 		public System.Data.Linq.Table<PlayLobby> PlayLobbies
 		{
 			get
@@ -87,97 +82,27 @@ namespace WcfService
 			}
 		}
 		
+		public System.Data.Linq.Table<Player> Players
+		{
+			get
+			{
+				return this.GetTable<Player>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Settlement> Settlements
+		{
+			get
+			{
+				return this.GetTable<Settlement>();
+			}
+		}
+		
 		public System.Data.Linq.Table<Lobby> Lobbies
 		{
 			get
 			{
 				return this.GetTable<Lobby>();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Players")]
-	public partial class Player : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _PlayerId;
-		
-		private string _PlayerName;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnPlayerIdChanging(int value);
-    partial void OnPlayerIdChanged();
-    partial void OnPlayerNameChanging(string value);
-    partial void OnPlayerNameChanged();
-    #endregion
-		
-		public Player()
-		{
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PlayerId", DbType="Int NOT NULL", IsPrimaryKey=true)]
-		public int PlayerId
-		{
-			get
-			{
-				return this._PlayerId;
-			}
-			set
-			{
-				if ((this._PlayerId != value))
-				{
-					this.OnPlayerIdChanging(value);
-					this.SendPropertyChanging();
-					this._PlayerId = value;
-					this.SendPropertyChanged("PlayerId");
-					this.OnPlayerIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PlayerName", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
-		public string PlayerName
-		{
-			get
-			{
-				return this._PlayerName;
-			}
-			set
-			{
-				if ((this._PlayerName != value))
-				{
-					this.OnPlayerNameChanging(value);
-					this.SendPropertyChanging();
-					this._PlayerName = value;
-					this.SendPropertyChanged("PlayerName");
-					this.OnPlayerNameChanged();
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
 	}
@@ -292,6 +217,394 @@ namespace WcfService
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Players")]
+	public partial class Player : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _PlayerId;
+		
+		private string _PlayerName;
+		
+		private bool _MyTurn;
+		
+		private string _Color;
+		
+		private int _Sheep;
+		
+		private int _IronOre;
+		
+		private int _Wood;
+		
+		private int _Wheat;
+		
+		private int _Brick;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnPlayerIdChanging(int value);
+    partial void OnPlayerIdChanged();
+    partial void OnPlayerNameChanging(string value);
+    partial void OnPlayerNameChanged();
+    partial void OnMyTurnChanging(bool value);
+    partial void OnMyTurnChanged();
+    partial void OnColorChanging(string value);
+    partial void OnColorChanged();
+    partial void OnSheepChanging(int value);
+    partial void OnSheepChanged();
+    partial void OnIronOreChanging(int value);
+    partial void OnIronOreChanged();
+    partial void OnWoodChanging(int value);
+    partial void OnWoodChanged();
+    partial void OnWheatChanging(int value);
+    partial void OnWheatChanged();
+    partial void OnBrickChanging(int value);
+    partial void OnBrickChanged();
+    #endregion
+		
+		public Player()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PlayerId", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int PlayerId
+		{
+			get
+			{
+				return this._PlayerId;
+			}
+			set
+			{
+				if ((this._PlayerId != value))
+				{
+					this.OnPlayerIdChanging(value);
+					this.SendPropertyChanging();
+					this._PlayerId = value;
+					this.SendPropertyChanged("PlayerId");
+					this.OnPlayerIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PlayerName", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string PlayerName
+		{
+			get
+			{
+				return this._PlayerName;
+			}
+			set
+			{
+				if ((this._PlayerName != value))
+				{
+					this.OnPlayerNameChanging(value);
+					this.SendPropertyChanging();
+					this._PlayerName = value;
+					this.SendPropertyChanged("PlayerName");
+					this.OnPlayerNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MyTurn", DbType="Bit NOT NULL")]
+		public bool MyTurn
+		{
+			get
+			{
+				return this._MyTurn;
+			}
+			set
+			{
+				if ((this._MyTurn != value))
+				{
+					this.OnMyTurnChanging(value);
+					this.SendPropertyChanging();
+					this._MyTurn = value;
+					this.SendPropertyChanged("MyTurn");
+					this.OnMyTurnChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Color", DbType="NVarChar(50)")]
+		public string Color
+		{
+			get
+			{
+				return this._Color;
+			}
+			set
+			{
+				if ((this._Color != value))
+				{
+					this.OnColorChanging(value);
+					this.SendPropertyChanging();
+					this._Color = value;
+					this.SendPropertyChanged("Color");
+					this.OnColorChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Sheep", DbType="Int NOT NULL")]
+		public int Sheep
+		{
+			get
+			{
+				return this._Sheep;
+			}
+			set
+			{
+				if ((this._Sheep != value))
+				{
+					this.OnSheepChanging(value);
+					this.SendPropertyChanging();
+					this._Sheep = value;
+					this.SendPropertyChanged("Sheep");
+					this.OnSheepChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IronOre", DbType="Int NOT NULL")]
+		public int IronOre
+		{
+			get
+			{
+				return this._IronOre;
+			}
+			set
+			{
+				if ((this._IronOre != value))
+				{
+					this.OnIronOreChanging(value);
+					this.SendPropertyChanging();
+					this._IronOre = value;
+					this.SendPropertyChanged("IronOre");
+					this.OnIronOreChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Wood", DbType="Int NOT NULL")]
+		public int Wood
+		{
+			get
+			{
+				return this._Wood;
+			}
+			set
+			{
+				if ((this._Wood != value))
+				{
+					this.OnWoodChanging(value);
+					this.SendPropertyChanging();
+					this._Wood = value;
+					this.SendPropertyChanged("Wood");
+					this.OnWoodChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Wheat", DbType="Int NOT NULL")]
+		public int Wheat
+		{
+			get
+			{
+				return this._Wheat;
+			}
+			set
+			{
+				if ((this._Wheat != value))
+				{
+					this.OnWheatChanging(value);
+					this.SendPropertyChanging();
+					this._Wheat = value;
+					this.SendPropertyChanged("Wheat");
+					this.OnWheatChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Brick", DbType="Int NOT NULL")]
+		public int Brick
+		{
+			get
+			{
+				return this._Brick;
+			}
+			set
+			{
+				if ((this._Brick != value))
+				{
+					this.OnBrickChanging(value);
+					this.SendPropertyChanging();
+					this._Brick = value;
+					this.SendPropertyChanged("Brick");
+					this.OnBrickChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Settlement")]
+	public partial class Settlement : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _SettlementID;
+		
+		private int _OwnerID;
+		
+		private bool _Upgraded;
+		
+		private int _Position;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnSettlementIDChanging(int value);
+    partial void OnSettlementIDChanged();
+    partial void OnOwnerIDChanging(int value);
+    partial void OnOwnerIDChanged();
+    partial void OnUpgradedChanging(bool value);
+    partial void OnUpgradedChanged();
+    partial void OnPositionChanging(int value);
+    partial void OnPositionChanged();
+    #endregion
+		
+		public Settlement()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SettlementID", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int SettlementID
+		{
+			get
+			{
+				return this._SettlementID;
+			}
+			set
+			{
+				if ((this._SettlementID != value))
+				{
+					this.OnSettlementIDChanging(value);
+					this.SendPropertyChanging();
+					this._SettlementID = value;
+					this.SendPropertyChanged("SettlementID");
+					this.OnSettlementIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OwnerID", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int OwnerID
+		{
+			get
+			{
+				return this._OwnerID;
+			}
+			set
+			{
+				if ((this._OwnerID != value))
+				{
+					this.OnOwnerIDChanging(value);
+					this.SendPropertyChanging();
+					this._OwnerID = value;
+					this.SendPropertyChanged("OwnerID");
+					this.OnOwnerIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Upgraded", DbType="Bit NOT NULL")]
+		public bool Upgraded
+		{
+			get
+			{
+				return this._Upgraded;
+			}
+			set
+			{
+				if ((this._Upgraded != value))
+				{
+					this.OnUpgradedChanging(value);
+					this.SendPropertyChanging();
+					this._Upgraded = value;
+					this.SendPropertyChanged("Upgraded");
+					this.OnUpgradedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Position", DbType="Int NOT NULL")]
+		public int Position
+		{
+			get
+			{
+				return this._Position;
+			}
+			set
+			{
+				if ((this._Position != value))
+				{
+					this.OnPositionChanging(value);
+					this.SendPropertyChanging();
+					this._Position = value;
+					this.SendPropertyChanged("Position");
+					this.OnPositionChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Lobby")]
 	public partial class Lobby : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -302,7 +615,11 @@ namespace WcfService
 		
 		private string _LobbyName;
 		
-		private System.Nullable<bool> _IsWaitingForPlayers;
+		private bool _IsWaitingForPlayers;
+		
+		private bool _IsUpdate;
+		
+		private System.Nullable<int> _DiceRollllllllllllllllllllol;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -312,8 +629,12 @@ namespace WcfService
     partial void OnLobbyIdChanged();
     partial void OnLobbyNameChanging(string value);
     partial void OnLobbyNameChanged();
-    partial void OnIsWaitingForPlayersChanging(System.Nullable<bool> value);
+    partial void OnIsWaitingForPlayersChanging(bool value);
     partial void OnIsWaitingForPlayersChanged();
+    partial void OnIsUpdateChanging(bool value);
+    partial void OnIsUpdateChanged();
+    partial void OnDiceRollllllllllllllllllllolChanging(System.Nullable<int> value);
+    partial void OnDiceRollllllllllllllllllllolChanged();
     #endregion
 		
 		public Lobby()
@@ -361,8 +682,8 @@ namespace WcfService
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsWaitingForPlayers", DbType="Bit")]
-		public System.Nullable<bool> IsWaitingForPlayers
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsWaitingForPlayers", DbType="Bit NOT NULL")]
+		public bool IsWaitingForPlayers
 		{
 			get
 			{
@@ -377,6 +698,46 @@ namespace WcfService
 					this._IsWaitingForPlayers = value;
 					this.SendPropertyChanged("IsWaitingForPlayers");
 					this.OnIsWaitingForPlayersChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsUpdate", DbType="Bit NOT NULL")]
+		public bool IsUpdate
+		{
+			get
+			{
+				return this._IsUpdate;
+			}
+			set
+			{
+				if ((this._IsUpdate != value))
+				{
+					this.OnIsUpdateChanging(value);
+					this.SendPropertyChanging();
+					this._IsUpdate = value;
+					this.SendPropertyChanged("IsUpdate");
+					this.OnIsUpdateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DiceRollllllllllllllllllllol", DbType="Int")]
+		public System.Nullable<int> DiceRollllllllllllllllllllol
+		{
+			get
+			{
+				return this._DiceRollllllllllllllllllllol;
+			}
+			set
+			{
+				if ((this._DiceRollllllllllllllllllllol != value))
+				{
+					this.OnDiceRollllllllllllllllllllolChanging(value);
+					this.SendPropertyChanging();
+					this._DiceRollllllllllllllllllllol = value;
+					this.SendPropertyChanged("DiceRollllllllllllllllllllol");
+					this.OnDiceRollllllllllllllllllllolChanged();
 				}
 			}
 		}

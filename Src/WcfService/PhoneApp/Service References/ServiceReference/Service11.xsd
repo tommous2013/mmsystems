@@ -27,6 +27,20 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="GetALobbyRoom">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/WcfService.DTO" minOccurs="0" name="lob" nillable="true" type="q4:OLobby" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetALobbyRoomResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/WcfService.DTO" minOccurs="0" name="GetALobbyRoomResult" nillable="true" type="q5:OLobbyRoom" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="GetAvailableLobbyRooms">
     <xs:complexType>
       <xs:sequence />
@@ -35,14 +49,14 @@
   <xs:element name="GetAvailableLobbyRoomsResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/WcfService.DTO" minOccurs="0" name="GetAvailableLobbyRoomsResult" nillable="true" type="q4:ArrayOfOLobbyRoom" />
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/WcfService.DTO" minOccurs="0" name="GetAvailableLobbyRoomsResult" nillable="true" type="q6:ArrayOfOLobbyRoom" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="StartPlay">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/WcfService.DTO" minOccurs="0" name="hostPlayer" nillable="true" type="q5:OPlayer" />
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/WcfService.DTO" minOccurs="0" name="hostPlayer" nillable="true" type="q7:OPlayer" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -54,8 +68,8 @@
   <xs:element name="SubscribeToLobbyRoom">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/WcfService.DTO" minOccurs="0" name="player" nillable="true" type="q6:OPlayer" />
-        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/WcfService.DTO" minOccurs="0" name="lobby" nillable="true" type="q7:OLobbyRoom" />
+        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/WcfService.DTO" minOccurs="0" name="player" nillable="true" type="q8:OPlayer" />
+        <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/WcfService.DTO" minOccurs="0" name="lobby" nillable="true" type="q9:OLobbyRoom" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -74,8 +88,20 @@
   <xs:element name="MakePlayerResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/WcfService.DTO" minOccurs="0" name="MakePlayerResult" nillable="true" type="q8:OPlayer" />
+        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/WcfService.DTO" minOccurs="0" name="MakePlayerResult" nillable="true" type="q10:OPlayer" />
       </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ChangeTurn">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/WcfService.DTO" minOccurs="0" name="lobbyRoom" nillable="true" type="q11:OLobbyRoom" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ChangeTurnResponse">
+    <xs:complexType>
+      <xs:sequence />
     </xs:complexType>
   </xs:element>
 </xs:schema>
