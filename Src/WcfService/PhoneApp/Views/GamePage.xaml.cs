@@ -117,7 +117,6 @@ namespace PhoneApp.Views
             GenGameMap();
             pollTimer.Tick += pollTimer_Tick;
             pollTimer.Start();
-
         }
 
         public int Dice
