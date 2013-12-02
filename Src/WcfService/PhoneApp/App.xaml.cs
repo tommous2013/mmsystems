@@ -102,33 +102,20 @@ namespace PhoneApp
         // Code to execute on Unhandled Exceptions
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
-<<<<<<< HEAD
-            //if (System.Diagnostics.Debugger.IsAttached)
-            //{
-            //    // An unhandled exception has occurred; break into the debugger
-            //    System.Diagnostics.Debugger.Break();
-            //}
 
-            //RootFrame.Navigate(new Uri("/Views/ErrorPage.xaml", UriKind.Relative));
-
-            exdsfg = e.ExceptionObject;
-
-            RootFrame.Navigate(new Uri("/Views/ErrorPage.xaml", UriKind.Relative));
-            
-            
-
-            e.Handled = true;
-=======
             if (System.Diagnostics.Debugger.IsAttached)
             {
                 // An unhandled exception has occurred; break into the debugger
                 System.Diagnostics.Debugger.Break();
             }
 
-            
+            exdsfg = e.ExceptionObject;
 
->>>>>>> c27885b... player turns, game field sync, first 2 turns free settlement and road placement
+            RootFrame.Navigate(new Uri("/Views/ErrorPage.xaml", UriKind.Relative));
 
+
+
+            e.Handled = true;
         }
 
         #region Phone application initialization
