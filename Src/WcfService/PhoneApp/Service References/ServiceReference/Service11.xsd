@@ -75,6 +75,20 @@
   </xs:element>
   <xs:element name="SubscribeToLobbyRoomResponse">
     <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="SubscribeToLobbyRoomResult" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdatePlayer">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/WcfService.DTO" minOccurs="0" name="playa" nillable="true" type="q10:OPlayer" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdatePlayerResponse">
+    <xs:complexType>
       <xs:sequence />
     </xs:complexType>
   </xs:element>
@@ -88,18 +102,30 @@
   <xs:element name="MakePlayerResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/WcfService.DTO" minOccurs="0" name="MakePlayerResult" nillable="true" type="q10:OPlayer" />
+        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/WcfService.DTO" minOccurs="0" name="MakePlayerResult" nillable="true" type="q11:OPlayer" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="ChangeTurn">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/WcfService.DTO" minOccurs="0" name="lobbyRoom" nillable="true" type="q11:OLobbyRoom" />
+        <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/WcfService.DTO" minOccurs="0" name="lobbyRoom" nillable="true" type="q12:OLobbyRoom" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="ChangeTurnResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateGame">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/WcfService.DTO" minOccurs="0" name="lobbyRoom" nillable="true" type="q13:OLobbyRoom" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateGameResponse">
     <xs:complexType>
       <xs:sequence />
     </xs:complexType>

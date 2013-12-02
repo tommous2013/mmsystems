@@ -36,12 +36,18 @@ namespace WcfService
     partial void InsertPlayer(Player instance);
     partial void UpdatePlayer(Player instance);
     partial void DeletePlayer(Player instance);
-    partial void InsertSettlement(Settlement instance);
-    partial void UpdateSettlement(Settlement instance);
-    partial void DeleteSettlement(Settlement instance);
     partial void InsertLobby(Lobby instance);
     partial void UpdateLobby(Lobby instance);
     partial void DeleteLobby(Lobby instance);
+    partial void InsertSettlement(Settlement instance);
+    partial void UpdateSettlement(Settlement instance);
+    partial void DeleteSettlement(Settlement instance);
+    partial void InsertRoad(Road instance);
+    partial void UpdateRoad(Road instance);
+    partial void DeleteRoad(Road instance);
+    partial void InsertError(Error instance);
+    partial void UpdateError(Error instance);
+    partial void DeleteError(Error instance);
     #endregion
 		
 		public DataClassesDataContext() : 
@@ -90,6 +96,14 @@ namespace WcfService
 			}
 		}
 		
+		public System.Data.Linq.Table<Lobby> Lobbies
+		{
+			get
+			{
+				return this.GetTable<Lobby>();
+			}
+		}
+		
 		public System.Data.Linq.Table<Settlement> Settlements
 		{
 			get
@@ -98,11 +112,19 @@ namespace WcfService
 			}
 		}
 		
-		public System.Data.Linq.Table<Lobby> Lobbies
+		public System.Data.Linq.Table<Road> Roads
 		{
 			get
 			{
-				return this.GetTable<Lobby>();
+				return this.GetTable<Road>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Error> Errors
+		{
+			get
+			{
+				return this.GetTable<Error>();
 			}
 		}
 	}
@@ -471,140 +493,6 @@ namespace WcfService
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Settlement")]
-	public partial class Settlement : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _SettlementID;
-		
-		private int _OwnerID;
-		
-		private bool _Upgraded;
-		
-		private int _Position;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnSettlementIDChanging(int value);
-    partial void OnSettlementIDChanged();
-    partial void OnOwnerIDChanging(int value);
-    partial void OnOwnerIDChanged();
-    partial void OnUpgradedChanging(bool value);
-    partial void OnUpgradedChanged();
-    partial void OnPositionChanging(int value);
-    partial void OnPositionChanged();
-    #endregion
-		
-		public Settlement()
-		{
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SettlementID", DbType="Int NOT NULL", IsPrimaryKey=true)]
-		public int SettlementID
-		{
-			get
-			{
-				return this._SettlementID;
-			}
-			set
-			{
-				if ((this._SettlementID != value))
-				{
-					this.OnSettlementIDChanging(value);
-					this.SendPropertyChanging();
-					this._SettlementID = value;
-					this.SendPropertyChanged("SettlementID");
-					this.OnSettlementIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OwnerID", DbType="Int NOT NULL", IsPrimaryKey=true)]
-		public int OwnerID
-		{
-			get
-			{
-				return this._OwnerID;
-			}
-			set
-			{
-				if ((this._OwnerID != value))
-				{
-					this.OnOwnerIDChanging(value);
-					this.SendPropertyChanging();
-					this._OwnerID = value;
-					this.SendPropertyChanged("OwnerID");
-					this.OnOwnerIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Upgraded", DbType="Bit NOT NULL")]
-		public bool Upgraded
-		{
-			get
-			{
-				return this._Upgraded;
-			}
-			set
-			{
-				if ((this._Upgraded != value))
-				{
-					this.OnUpgradedChanging(value);
-					this.SendPropertyChanging();
-					this._Upgraded = value;
-					this.SendPropertyChanged("Upgraded");
-					this.OnUpgradedChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Position", DbType="Int NOT NULL")]
-		public int Position
-		{
-			get
-			{
-				return this._Position;
-			}
-			set
-			{
-				if ((this._Position != value))
-				{
-					this.OnPositionChanging(value);
-					this.SendPropertyChanging();
-					this._Position = value;
-					this.SendPropertyChanged("Position");
-					this.OnPositionChanged();
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Lobby")]
 	public partial class Lobby : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -738,6 +626,384 @@ namespace WcfService
 					this._DiceRollllllllllllllllllllol = value;
 					this.SendPropertyChanged("DiceRollllllllllllllllllllol");
 					this.OnDiceRollllllllllllllllllllolChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Settlement")]
+	public partial class Settlement : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _SettlementID;
+		
+		private int _RoadID;
+		
+		private bool _Upgraded;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnSettlementIDChanging(int value);
+    partial void OnSettlementIDChanged();
+    partial void OnRoadIDChanging(int value);
+    partial void OnRoadIDChanged();
+    partial void OnUpgradedChanging(bool value);
+    partial void OnUpgradedChanged();
+    #endregion
+		
+		public Settlement()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SettlementID", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int SettlementID
+		{
+			get
+			{
+				return this._SettlementID;
+			}
+			set
+			{
+				if ((this._SettlementID != value))
+				{
+					this.OnSettlementIDChanging(value);
+					this.SendPropertyChanging();
+					this._SettlementID = value;
+					this.SendPropertyChanged("SettlementID");
+					this.OnSettlementIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RoadID", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int RoadID
+		{
+			get
+			{
+				return this._RoadID;
+			}
+			set
+			{
+				if ((this._RoadID != value))
+				{
+					this.OnRoadIDChanging(value);
+					this.SendPropertyChanging();
+					this._RoadID = value;
+					this.SendPropertyChanged("RoadID");
+					this.OnRoadIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Upgraded", DbType="Bit NOT NULL")]
+		public bool Upgraded
+		{
+			get
+			{
+				return this._Upgraded;
+			}
+			set
+			{
+				if ((this._Upgraded != value))
+				{
+					this.OnUpgradedChanging(value);
+					this.SendPropertyChanging();
+					this._Upgraded = value;
+					this.SendPropertyChanged("Upgraded");
+					this.OnUpgradedChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Road")]
+	public partial class Road : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _RoadID;
+		
+		private int _OwenrID;
+		
+		private int _LobbyID;
+		
+		private int _PositionX;
+		
+		private int _PositionY;
+		
+		private string _ImgUrl;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnRoadIDChanging(int value);
+    partial void OnRoadIDChanged();
+    partial void OnOwenrIDChanging(int value);
+    partial void OnOwenrIDChanged();
+    partial void OnLobbyIDChanging(int value);
+    partial void OnLobbyIDChanged();
+    partial void OnPositionXChanging(int value);
+    partial void OnPositionXChanged();
+    partial void OnPositionYChanging(int value);
+    partial void OnPositionYChanged();
+    partial void OnImgUrlChanging(string value);
+    partial void OnImgUrlChanged();
+    #endregion
+		
+		public Road()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RoadID", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int RoadID
+		{
+			get
+			{
+				return this._RoadID;
+			}
+			set
+			{
+				if ((this._RoadID != value))
+				{
+					this.OnRoadIDChanging(value);
+					this.SendPropertyChanging();
+					this._RoadID = value;
+					this.SendPropertyChanged("RoadID");
+					this.OnRoadIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OwenrID", DbType="Int NOT NULL")]
+		public int OwenrID
+		{
+			get
+			{
+				return this._OwenrID;
+			}
+			set
+			{
+				if ((this._OwenrID != value))
+				{
+					this.OnOwenrIDChanging(value);
+					this.SendPropertyChanging();
+					this._OwenrID = value;
+					this.SendPropertyChanged("OwenrID");
+					this.OnOwenrIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LobbyID", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int LobbyID
+		{
+			get
+			{
+				return this._LobbyID;
+			}
+			set
+			{
+				if ((this._LobbyID != value))
+				{
+					this.OnLobbyIDChanging(value);
+					this.SendPropertyChanging();
+					this._LobbyID = value;
+					this.SendPropertyChanged("LobbyID");
+					this.OnLobbyIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PositionX", DbType="Int NOT NULL")]
+		public int PositionX
+		{
+			get
+			{
+				return this._PositionX;
+			}
+			set
+			{
+				if ((this._PositionX != value))
+				{
+					this.OnPositionXChanging(value);
+					this.SendPropertyChanging();
+					this._PositionX = value;
+					this.SendPropertyChanged("PositionX");
+					this.OnPositionXChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PositionY", DbType="Int NOT NULL")]
+		public int PositionY
+		{
+			get
+			{
+				return this._PositionY;
+			}
+			set
+			{
+				if ((this._PositionY != value))
+				{
+					this.OnPositionYChanging(value);
+					this.SendPropertyChanging();
+					this._PositionY = value;
+					this.SendPropertyChanged("PositionY");
+					this.OnPositionYChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ImgUrl", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string ImgUrl
+		{
+			get
+			{
+				return this._ImgUrl;
+			}
+			set
+			{
+				if ((this._ImgUrl != value))
+				{
+					this.OnImgUrlChanging(value);
+					this.SendPropertyChanging();
+					this._ImgUrl = value;
+					this.SendPropertyChanged("ImgUrl");
+					this.OnImgUrlChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Errors")]
+	public partial class Error : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Id;
+		
+		private string _Mesg;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnMesgChanging(string value);
+    partial void OnMesgChanged();
+    #endregion
+		
+		public Error()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Mesg", DbType="NVarChar(100)")]
+		public string Mesg
+		{
+			get
+			{
+				return this._Mesg;
+			}
+			set
+			{
+				if ((this._Mesg != value))
+				{
+					this.OnMesgChanging(value);
+					this.SendPropertyChanging();
+					this._Mesg = value;
+					this.SendPropertyChanged("Mesg");
+					this.OnMesgChanged();
 				}
 			}
 		}

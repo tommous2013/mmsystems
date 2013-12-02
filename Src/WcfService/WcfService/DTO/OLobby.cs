@@ -21,6 +21,12 @@ namespace WcfService.DTO
         [DataMember]
         public int DiceNum { get; set; }
 
+        [DataMember]
+        public List<ORoad> Roads { get; set; }
+
+        [DataMember]
+        public List<OSettlement> Settlements { get; set; }
+            
         public override string ToString()
         {
             return LobbyName;

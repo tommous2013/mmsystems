@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
@@ -14,6 +15,7 @@ namespace WcfService
     public class Service1 : IService1
     {
         private DataClassesDataContext dc;
+
         public Service1()
         {
             dc = new DataClassesDataContext();
@@ -50,9 +52,9 @@ namespace WcfService
         {
             OLobbyRoom result = new OLobbyRoom();
             var qlob = (from lobby in dc.Lobbies
-                       where lobby.LobbyId == lob.LobbyId
-                       select lobby).First();
-            result.TheLobby = new OLobby(){IsWaitingForPlayers = (bool)qlob.IsWaitingForPlayers, LobbyId = qlob.LobbyId, LobbyName = qlob.LobbyName};
+                        where lobby.LobbyId == lob.LobbyId
+                        select lobby).First();
+            result.TheLobby = new OLobby() { IsWaitingForPlayers = (bool)qlob.IsWaitingForPlayers, LobbyId = qlob.LobbyId, LobbyName = qlob.LobbyName };
             var qplayer = from player in dc.Players
                           join playLobby in dc.PlayLobbies on player.PlayerId equals playLobby.PlayerId
                           where playLobby.LobbyId == lob.LobbyId
@@ -60,13 +62,41 @@ namespace WcfService
             result.PlayerList = new List<OPlayer>();
             foreach (Player player in qplayer)
             {
-                result.PlayerList.Add(new OPlayer(){MyTurn = player.MyTurn,PlayerId = player.PlayerId, PlayerName = player.PlayerName,Color = player.Color, Brick = player.Brick, Wheat = player.Wheat, IronOre = player.IronOre, Sheep = player.Sheep, Wood = player.Wood});
+                result.PlayerList.Add(new OPlayer() { MyTurn = player.MyTurn, PlayerId = player.PlayerId, PlayerName = player.PlayerName, Color = player.Color, Brick = player.Brick, Wheat = player.Wheat, IronOre = player.IronOre, Sheep = player.Sheep, Wood = player.Wood });
             }
             var qhost = (from oPlayer in result.PlayerList
-                        join playLobby in dc.PlayLobbies on oPlayer.PlayerId equals playLobby.PlayerId
-                        where oPlayer.PlayerId == playLobby.HostPlayer && playLobby.LobbyId == lob.LobbyId
-                        select oPlayer).First();
+                         join playLobby in dc.PlayLobbies on oPlayer.PlayerId equals playLobby.PlayerId
+                         where oPlayer.PlayerId == playLobby.HostPlayer && playLobby.LobbyId == lob.LobbyId
+                         select oPlayer).First();
             result.HostPlayer = qhost;
+
+            var qSettlements = (from settlement in dc.Settlements
+                                join road in dc.Roads on settlement.RoadID equals road.RoadID
+                                join player in dc.Players on road.OwenrID equals player.PlayerId
+                                where road.LobbyID == result.TheLobby.LobbyId
+                                select new OSettlement()
+                                {
+                                    ImageUrl = road.ImgUrl,
+                                    Owner = new OPlayer() { Brick = player.Brick, Color = player.Color, IronOre = player.IronOre, MyTurn = player.MyTurn, PlayerId = player.PlayerId, PlayerName = player.PlayerName, Sheep = player.Sheep, Wheat = player.Wheat, Wood = player.Wood },
+                                    Position = new Point(road.PositionX, road.PositionY),
+                                    Upgraded = settlement.Upgraded
+                                }).ToList();
+
+            result.TheLobby.Settlements = qSettlements;
+
+            var qRoads = (from road in dc.Roads
+                          join player in dc.Players on road.OwenrID equals player.PlayerId
+                          where road.LobbyID == result.TheLobby.LobbyId && player.PlayerId == road.OwenrID
+                          select new ORoad()
+                          {
+                              Owner = new OPlayer() { Brick = player.Brick, Color = player.Color, IronOre = player.IronOre, MyTurn = player.MyTurn, PlayerId = player.PlayerId, PlayerName = player.PlayerName, Sheep = player.Sheep, Wheat = player.Wheat, Wood = player.Wood },
+                              Position = new Point(road.PositionX, road.PositionY),
+                              ImageUrl = road.ImgUrl
+                          }).ToList();
+            result.TheLobby.Roads = qRoads;
+
+
+
             return result;
         }
 
@@ -129,46 +159,63 @@ namespace WcfService
 
         }
 
-        //public GameObject SendGameUpdate(OPlayer player)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        public void SubscribeToLobbyRoom(OPlayer player, OLobbyRoom lobby)
+        public bool SubscribeToLobbyRoom(OPlayer player, OLobbyRoom lobby)
         {
-            PlayLobby pLobby = new PlayLobby();
-            pLobby.LobbyId = lobby.TheLobby.LobbyId;
-            pLobby.PlayerId = player.PlayerId;
-            pLobby.HostPlayer = lobby.HostPlayer.PlayerId;
-
-            dc.PlayLobbies.InsertOnSubmit(pLobby);
-            dc.SubmitChanges();
-
-            var q = from playLobby in dc.PlayLobbies
-                    where playLobby.LobbyId == lobby.TheLobby.LobbyId
-                    select playLobby;
-
-            if (q.Count() >= 4)
+            try
             {
+                var playersInLobbyBeforeJoining = (from playLobby in dc.PlayLobbies
+                          where playLobby.LobbyId == lobby.TheLobby.LobbyId
+                          select playLobby).Count();
 
-                //StartPlay(lobby.HostPlayer);
+                if (playersInLobbyBeforeJoining >= 4)
+                    return false;
 
-                var update = (from l in dc.Lobbies
-                              where l.LobbyId == lobby.TheLobby.LobbyId
-                              select l).Single();
-                update.IsWaitingForPlayers = false;
+                PlayLobby pLobby = new PlayLobby();
+                pLobby.LobbyId = lobby.TheLobby.LobbyId;
+                pLobby.PlayerId = player.PlayerId;
+                pLobby.HostPlayer = lobby.HostPlayer.PlayerId;
+
+                dc.PlayLobbies.InsertOnSubmit(pLobby);
                 dc.SubmitChanges();
 
-            }
-        }
+                var playersInLobbyAfterJoining = from playLobby in dc.PlayLobbies
+                        where playLobby.LobbyId == lobby.TheLobby.LobbyId
+                        select playLobby;
 
-        //public OPlayer GetPlayer(int id)
-        //{
-        //    var pl = (from p in dc.Players
-        //              where p.PlayerId == id
-        //              select p).Single();
-        //    return new OPlayer() { PlayerId = pl.PlayerId, PlayerName = pl.PlayerName };
-        //}
+                if (playersInLobbyAfterJoining.Count() >= 4)
+                {
+                    var update = (from l in dc.Lobbies
+                                  where l.LobbyId == lobby.TheLobby.LobbyId
+                                  select l).Single();
+                    update.IsWaitingForPlayers = false;
+                    //dc.SubmitChanges();
+
+                    var a = (from playLobby in dc.PlayLobbies
+                             join player1 in dc.Players on playLobby.PlayerId equals player1.PlayerId
+                             where playLobby.LobbyId == lobby.TheLobby.LobbyId
+                             select player1);
+
+                    a.First().MyTurn = true;
+                    //dc.SubmitChanges();
+
+                    var b = new string[] { "White", "Red", "Blue", "Orange" };
+                    int i = 0;
+                    foreach (var p in a)
+                    {
+                        p.Color = b[i++];
+                    }
+                    dc.SubmitChanges();
+                }
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                ErrorReport("SubscribeToLobbyRoom catch: " + e.Message);
+                return false;
+            }
+            
+        }
 
         public OPlayer MakePlayer(string username)
         {
@@ -179,6 +226,14 @@ namespace WcfService
 
                 var pPlayer = new Player { PlayerName = username, PlayerId = ++maxId };
 
+                if (username == "teste") // Cheat!!!!!!!!!!!!!!!!!!!!!
+                {
+                    pPlayer.IronOre = 10;
+                    pPlayer.Sheep = 10;
+                    pPlayer.Brick = 10;
+                    pPlayer.Wood = 10;
+                    pPlayer.Wheat = 10;
+                }
                 dc.Players.InsertOnSubmit(pPlayer);
                 dc.SubmitChanges();
 
@@ -186,36 +241,144 @@ namespace WcfService
             }
             catch (Exception)
             {
-
+                ErrorReport("MakePlayer Catch");
                 throw;
             }
+        }
 
+        public void UpdatePlayer(OPlayer playa)
+        {
+            var q = (from player in dc.Players
+                     where player.PlayerId == playa.PlayerId
+                     select player).Single();
+            q.IronOre = playa.IronOre;
+            q.Sheep = playa.Sheep;
+            q.Wheat = playa.Wheat;
+            q.Wood = playa.Wood;
+            q.Brick = playa.Brick;
+            q.Color = playa.Color;
+            q.MyTurn = playa.MyTurn;
+            dc.SubmitChanges();
         }
 
         public void ChangeTurn(OLobbyRoom lobbyRoom)
         {
-            var q = from oPlayer in lobbyRoom.PlayerList
-                    where oPlayer.MyTurn == true
-                    select oPlayer;
-
-            for (int i = 0; i < lobbyRoom.PlayerList.Count; i++)
+            bool turn = false;
+            foreach (var oPlayer in lobbyRoom.PlayerList)
             {
-                if (lobbyRoom.PlayerList.ElementAt(i).MyTurn)
+                if (oPlayer.MyTurn)
                 {
-                    lobbyRoom.PlayerList.ElementAt(i).MyTurn = false;
-                    if (++i >3)
-                    {
-                        lobbyRoom.PlayerList.ElementAt(0).MyTurn = true;
-                    }
-                    else
-                    {
-                        lobbyRoom.PlayerList.ElementAt(++i).MyTurn = true;
-                    }
-                    
+                    turn = true;
+                    oPlayer.MyTurn = false;
+                    UpdatePlayer(oPlayer);
                 }
-                
+                else if (turn)
+                {
+                    turn = false;
+                    oPlayer.MyTurn = true;
+                    UpdatePlayer(oPlayer);
+                }
             }
+            if (lobbyRoom.PlayerList.All(p => p.MyTurn == false))
+            {
+                lobbyRoom.PlayerList.First().MyTurn = true;
+                UpdatePlayer(lobbyRoom.PlayerList.First());
+            }
+        }
 
+        public void UpdateGame(OLobbyRoom lobbyRoom)
+        {
+            try
+            {
+
+
+                var qRoads = from oRoad in lobbyRoom.TheLobby.Roads
+                             where oRoad.RoadId == -1
+                             select oRoad;
+
+                int qRoadIdMax;
+                try
+                {
+                    qRoadIdMax = (from road in dc.Roads
+                                  select road.RoadID).Max();
+                }
+                catch (Exception)
+                {
+                    ErrorReport("UpdateGame qRoadIdMax catch");
+                    qRoadIdMax = 0;
+                }
+
+                foreach (var oRoad in qRoads)
+                {
+                    ++qRoadIdMax;
+                    dc.Roads.InsertOnSubmit(new Road()
+                    {
+                        ImgUrl = oRoad.ImageUrl,
+                        LobbyID = lobbyRoom.TheLobby.LobbyId,
+                        OwenrID = oRoad.Owner.PlayerId,
+                        PositionX = oRoad.Position.X,
+                        PositionY = oRoad.Position.Y,
+                        RoadID = qRoadIdMax
+                    });
+                }
+
+                //find new settlements
+
+                //var qSettlements = lobbyRoom.TheLobby.Settlements.Where(p => !dc.Settlements.Any(p2 => p2.RoadID == p.RoadId));
+                var qSettlements = from oSettlement in lobbyRoom.TheLobby.Settlements
+                                   where oSettlement.RoadId == -1
+                                   select oSettlement;
+                int qSettlementIdMax;
+                try
+                {
+                    qSettlementIdMax = (from settlement in dc.Settlements
+                                        select settlement.SettlementID).Max();
+                }
+                catch (Exception)
+                {
+                    ErrorReport("UpdateGame, qSettlementIdMax catch");
+                    qSettlementIdMax = 0;
+                }
+
+                foreach (var oSettlement in qSettlements)
+                {
+                    ++qSettlementIdMax;
+                    ++qRoadIdMax;
+                    dc.Roads.InsertOnSubmit(new Road() { ImgUrl = oSettlement.ImageUrl, LobbyID = lobbyRoom.TheLobby.LobbyId, OwenrID = oSettlement.Owner.PlayerId, PositionX = oSettlement.Position.X, PositionY = oSettlement.Position.Y, RoadID = qRoadIdMax });
+                    dc.Settlements.InsertOnSubmit(new Settlement() { RoadID = qRoadIdMax, Upgraded = oSettlement.Upgraded, SettlementID = qSettlementIdMax });
+                }
+
+                //update settlements
+                var qSettlementsUpdate = from settlement1 in dc.Settlements
+                                         join road in dc.Roads on settlement1.RoadID equals road.RoadID
+                                         where road.LobbyID == lobbyRoom.TheLobby.LobbyId
+                                         select settlement1;
+
+                foreach (var settlement in qSettlementsUpdate)
+                {
+                    foreach (var oSettlement in lobbyRoom.TheLobby.Settlements)
+                    {
+                        if (settlement.RoadID == oSettlement.RoadId)
+                        {
+                            settlement.Upgraded = oSettlement.Upgraded;
+                        }
+                    }
+                }
+                dc.SubmitChanges();
+            }
+            catch (Exception e)
+            {
+                ErrorReport(e.Message);
+            }
+        }
+
+        public void ErrorReport(string msg)
+        {
+            int maxId = (from error in dc.Errors
+                         select error.Id).Max();
+
+            dc.Errors.InsertOnSubmit(new Error() { Id = ++maxId, Mesg = msg });
+            dc.SubmitChanges();
         }
     }
 }

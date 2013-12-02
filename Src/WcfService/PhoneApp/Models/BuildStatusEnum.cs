@@ -9,4 +9,9 @@ namespace PhoneApp.Models
     {
         None, Road, Settlement, City
     }
+
+    public enum GameState
+    {
+        FirstTurn, SecondTurn, NormalPlay,Finished
+    }
 }

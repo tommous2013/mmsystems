@@ -20,7 +20,7 @@
             <Image Source="/Images/logo.png"></Image>
             <TextBlock Text="UserName:" HorizontalAlignment="Center"></TextBlock>
             <TextBox Name="PlayerName" Text="{Binding PlayerName, Mode=TwoWay}"></TextBox>
-            <Button Content="Login" Width="auto" Click="Button_Click"></Button>
+            <Button Name="btn" Content="Login" Width="auto" Click="Button_Click"></Button>
         </StackPanel>
     </Grid>
 

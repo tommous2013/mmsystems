@@ -238,6 +238,10 @@ namespace PhoneApp.ServiceReference {
         
         private string LobbyNameField;
         
+        private System.Collections.ObjectModel.ObservableCollection<PhoneApp.ServiceReference.ORoad> RoadsField;
+        
+        private System.Collections.ObjectModel.ObservableCollection<PhoneApp.ServiceReference.OSettlement> SettlementsField;
+        
         [System.Runtime.Serialization.DataMemberAttribute()]
         public int DiceNum {
             get {
@@ -290,9 +294,177 @@ namespace PhoneApp.ServiceReference {
             }
         }
         
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.ObjectModel.ObservableCollection<PhoneApp.ServiceReference.ORoad> Roads {
+            get {
+                return this.RoadsField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.RoadsField, value) != true)) {
+                    this.RoadsField = value;
+                    this.RaisePropertyChanged("Roads");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.ObjectModel.ObservableCollection<PhoneApp.ServiceReference.OSettlement> Settlements {
+            get {
+                return this.SettlementsField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.SettlementsField, value) != true)) {
+                    this.SettlementsField = value;
+                    this.RaisePropertyChanged("Settlements");
+                }
+            }
+        }
+        
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ORoad", Namespace="http://schemas.datacontract.org/2004/07/WcfService.DTO")]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(PhoneApp.ServiceReference.OSettlement))]
+    public partial class ORoad : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string ImageUrlField;
+        
+        private PhoneApp.ServiceReference.OPlayer OwnerField;
+        
+        private PhoneApp.ServiceReference.Point PositionField;
+        
+        private int RoadIdField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ImageUrl {
+            get {
+                return this.ImageUrlField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ImageUrlField, value) != true)) {
+                    this.ImageUrlField = value;
+                    this.RaisePropertyChanged("ImageUrl");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public PhoneApp.ServiceReference.OPlayer Owner {
+            get {
+                return this.OwnerField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.OwnerField, value) != true)) {
+                    this.OwnerField = value;
+                    this.RaisePropertyChanged("Owner");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public PhoneApp.ServiceReference.Point Position {
+            get {
+                return this.PositionField;
+            }
+            set {
+                if ((this.PositionField.Equals(value) != true)) {
+                    this.PositionField = value;
+                    this.RaisePropertyChanged("Position");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int RoadId {
+            get {
+                return this.RoadIdField;
+            }
+            set {
+                if ((this.RoadIdField.Equals(value) != true)) {
+                    this.RoadIdField = value;
+                    this.RaisePropertyChanged("RoadId");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="OSettlement", Namespace="http://schemas.datacontract.org/2004/07/WcfService.DTO")]
+    public partial class OSettlement : PhoneApp.ServiceReference.ORoad {
+        
+        private bool UpgradedField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool Upgraded {
+            get {
+                return this.UpgradedField;
+            }
+            set {
+                if ((this.UpgradedField.Equals(value) != true)) {
+                    this.UpgradedField = value;
+                    this.RaisePropertyChanged("Upgraded");
+                }
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Point", Namespace="http://schemas.datacontract.org/2004/07/System.Drawing")]
+    public partial struct Point : System.ComponentModel.INotifyPropertyChanged {
+        
+        private int xField;
+        
+        private int yField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true)]
+        public int x {
+            get {
+                return this.xField;
+            }
+            set {
+                if ((this.xField.Equals(value) != true)) {
+                    this.xField = value;
+                    this.RaisePropertyChanged("x");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true)]
+        public int y {
+            get {
+                return this.yField;
+            }
+            set {
+                if ((this.yField.Equals(value) != true)) {
+                    this.yField = value;
+                    this.RaisePropertyChanged("y");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        void RaisePropertyChanged(string propertyName) {
             System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
             if ((propertyChanged != null)) {
                 propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
@@ -332,7 +504,12 @@ namespace PhoneApp.ServiceReference {
         [System.ServiceModel.OperationContractAttribute(AsyncPattern=true, Action="http://tempuri.org/IService1/SubscribeToLobbyRoom", ReplyAction="http://tempuri.org/IService1/SubscribeToLobbyRoomResponse")]
         System.IAsyncResult BeginSubscribeToLobbyRoom(PhoneApp.ServiceReference.OPlayer player, PhoneApp.ServiceReference.OLobbyRoom lobby, System.AsyncCallback callback, object asyncState);
         
-        void EndSubscribeToLobbyRoom(System.IAsyncResult result);
+        bool EndSubscribeToLobbyRoom(System.IAsyncResult result);
+        
+        [System.ServiceModel.OperationContractAttribute(AsyncPattern=true, Action="http://tempuri.org/IService1/UpdatePlayer", ReplyAction="http://tempuri.org/IService1/UpdatePlayerResponse")]
+        System.IAsyncResult BeginUpdatePlayer(PhoneApp.ServiceReference.OPlayer playa, System.AsyncCallback callback, object asyncState);
+        
+        void EndUpdatePlayer(System.IAsyncResult result);
         
         [System.ServiceModel.OperationContractAttribute(AsyncPattern=true, Action="http://tempuri.org/IService1/MakePlayer", ReplyAction="http://tempuri.org/IService1/MakePlayerResponse")]
         System.IAsyncResult BeginMakePlayer(string username, System.AsyncCallback callback, object asyncState);
@@ -343,6 +520,11 @@ namespace PhoneApp.ServiceReference {
         System.IAsyncResult BeginChangeTurn(PhoneApp.ServiceReference.OLobbyRoom lobbyRoom, System.AsyncCallback callback, object asyncState);
         
         void EndChangeTurn(System.IAsyncResult result);
+        
+        [System.ServiceModel.OperationContractAttribute(AsyncPattern=true, Action="http://tempuri.org/IService1/UpdateGame", ReplyAction="http://tempuri.org/IService1/UpdateGameResponse")]
+        System.IAsyncResult BeginUpdateGame(PhoneApp.ServiceReference.OLobbyRoom lobbyRoom, System.AsyncCallback callback, object asyncState);
+        
+        void EndUpdateGame(System.IAsyncResult result);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -427,6 +609,25 @@ namespace PhoneApp.ServiceReference {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    public partial class SubscribeToLobbyRoomCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        public SubscribeToLobbyRoomCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        public bool Result {
+            get {
+                base.RaiseExceptionIfNecessary();
+                return ((bool)(this.results[0]));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public partial class MakePlayerCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
         
         private object[] results;
@@ -484,6 +685,12 @@ namespace PhoneApp.ServiceReference {
         
         private System.Threading.SendOrPostCallback onSubscribeToLobbyRoomCompletedDelegate;
         
+        private BeginOperationDelegate onBeginUpdatePlayerDelegate;
+        
+        private EndOperationDelegate onEndUpdatePlayerDelegate;
+        
+        private System.Threading.SendOrPostCallback onUpdatePlayerCompletedDelegate;
+        
         private BeginOperationDelegate onBeginMakePlayerDelegate;
         
         private EndOperationDelegate onEndMakePlayerDelegate;
@@ -495,6 +702,12 @@ namespace PhoneApp.ServiceReference {
         private EndOperationDelegate onEndChangeTurnDelegate;
         
         private System.Threading.SendOrPostCallback onChangeTurnCompletedDelegate;
+        
+        private BeginOperationDelegate onBeginUpdateGameDelegate;
+        
+        private EndOperationDelegate onEndUpdateGameDelegate;
+        
+        private System.Threading.SendOrPostCallback onUpdateGameCompletedDelegate;
         
         private BeginOperationDelegate onBeginOpenDelegate;
         
@@ -559,11 +772,15 @@ namespace PhoneApp.ServiceReference {
         
         public event System.EventHandler<System.ComponentModel.AsyncCompletedEventArgs> StartPlayCompleted;
         
-        public event System.EventHandler<System.ComponentModel.AsyncCompletedEventArgs> SubscribeToLobbyRoomCompleted;
+        public event System.EventHandler<SubscribeToLobbyRoomCompletedEventArgs> SubscribeToLobbyRoomCompleted;
+        
+        public event System.EventHandler<System.ComponentModel.AsyncCompletedEventArgs> UpdatePlayerCompleted;
         
         public event System.EventHandler<MakePlayerCompletedEventArgs> MakePlayerCompleted;
         
         public event System.EventHandler<System.ComponentModel.AsyncCompletedEventArgs> ChangeTurnCompleted;
+        
+        public event System.EventHandler<System.ComponentModel.AsyncCompletedEventArgs> UpdateGameCompleted;
         
         public event System.EventHandler<System.ComponentModel.AsyncCompletedEventArgs> OpenCompleted;
         
@@ -800,8 +1017,8 @@ namespace PhoneApp.ServiceReference {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        void PhoneApp.ServiceReference.IService1.EndSubscribeToLobbyRoom(System.IAsyncResult result) {
-            base.Channel.EndSubscribeToLobbyRoom(result);
+        bool PhoneApp.ServiceReference.IService1.EndSubscribeToLobbyRoom(System.IAsyncResult result) {
+            return base.Channel.EndSubscribeToLobbyRoom(result);
         }
         
         private System.IAsyncResult OnBeginSubscribeToLobbyRoom(object[] inValues, System.AsyncCallback callback, object asyncState) {
@@ -811,14 +1028,15 @@ namespace PhoneApp.ServiceReference {
         }
         
         private object[] OnEndSubscribeToLobbyRoom(System.IAsyncResult result) {
-            ((PhoneApp.ServiceReference.IService1)(this)).EndSubscribeToLobbyRoom(result);
-            return null;
+            bool retVal = ((PhoneApp.ServiceReference.IService1)(this)).EndSubscribeToLobbyRoom(result);
+            return new object[] {
+                    retVal};
         }
         
         private void OnSubscribeToLobbyRoomCompleted(object state) {
             if ((this.SubscribeToLobbyRoomCompleted != null)) {
                 InvokeAsyncCompletedEventArgs e = ((InvokeAsyncCompletedEventArgs)(state));
-                this.SubscribeToLobbyRoomCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(e.Error, e.Cancelled, e.UserState));
+                this.SubscribeToLobbyRoomCompleted(this, new SubscribeToLobbyRoomCompletedEventArgs(e.Results, e.Error, e.Cancelled, e.UserState));
             }
         }
         
@@ -839,6 +1057,51 @@ namespace PhoneApp.ServiceReference {
             base.InvokeAsync(this.onBeginSubscribeToLobbyRoomDelegate, new object[] {
                         player,
                         lobby}, this.onEndSubscribeToLobbyRoomDelegate, this.onSubscribeToLobbyRoomCompletedDelegate, userState);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        System.IAsyncResult PhoneApp.ServiceReference.IService1.BeginUpdatePlayer(PhoneApp.ServiceReference.OPlayer playa, System.AsyncCallback callback, object asyncState) {
+            return base.Channel.BeginUpdatePlayer(playa, callback, asyncState);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        void PhoneApp.ServiceReference.IService1.EndUpdatePlayer(System.IAsyncResult result) {
+            base.Channel.EndUpdatePlayer(result);
+        }
+        
+        private System.IAsyncResult OnBeginUpdatePlayer(object[] inValues, System.AsyncCallback callback, object asyncState) {
+            PhoneApp.ServiceReference.OPlayer playa = ((PhoneApp.ServiceReference.OPlayer)(inValues[0]));
+            return ((PhoneApp.ServiceReference.IService1)(this)).BeginUpdatePlayer(playa, callback, asyncState);
+        }
+        
+        private object[] OnEndUpdatePlayer(System.IAsyncResult result) {
+            ((PhoneApp.ServiceReference.IService1)(this)).EndUpdatePlayer(result);
+            return null;
+        }
+        
+        private void OnUpdatePlayerCompleted(object state) {
+            if ((this.UpdatePlayerCompleted != null)) {
+                InvokeAsyncCompletedEventArgs e = ((InvokeAsyncCompletedEventArgs)(state));
+                this.UpdatePlayerCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(e.Error, e.Cancelled, e.UserState));
+            }
+        }
+        
+        public void UpdatePlayerAsync(PhoneApp.ServiceReference.OPlayer playa) {
+            this.UpdatePlayerAsync(playa, null);
+        }
+        
+        public void UpdatePlayerAsync(PhoneApp.ServiceReference.OPlayer playa, object userState) {
+            if ((this.onBeginUpdatePlayerDelegate == null)) {
+                this.onBeginUpdatePlayerDelegate = new BeginOperationDelegate(this.OnBeginUpdatePlayer);
+            }
+            if ((this.onEndUpdatePlayerDelegate == null)) {
+                this.onEndUpdatePlayerDelegate = new EndOperationDelegate(this.OnEndUpdatePlayer);
+            }
+            if ((this.onUpdatePlayerCompletedDelegate == null)) {
+                this.onUpdatePlayerCompletedDelegate = new System.Threading.SendOrPostCallback(this.OnUpdatePlayerCompleted);
+            }
+            base.InvokeAsync(this.onBeginUpdatePlayerDelegate, new object[] {
+                        playa}, this.onEndUpdatePlayerDelegate, this.onUpdatePlayerCompletedDelegate, userState);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
@@ -930,6 +1193,51 @@ namespace PhoneApp.ServiceReference {
             }
             base.InvokeAsync(this.onBeginChangeTurnDelegate, new object[] {
                         lobbyRoom}, this.onEndChangeTurnDelegate, this.onChangeTurnCompletedDelegate, userState);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        System.IAsyncResult PhoneApp.ServiceReference.IService1.BeginUpdateGame(PhoneApp.ServiceReference.OLobbyRoom lobbyRoom, System.AsyncCallback callback, object asyncState) {
+            return base.Channel.BeginUpdateGame(lobbyRoom, callback, asyncState);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        void PhoneApp.ServiceReference.IService1.EndUpdateGame(System.IAsyncResult result) {
+            base.Channel.EndUpdateGame(result);
+        }
+        
+        private System.IAsyncResult OnBeginUpdateGame(object[] inValues, System.AsyncCallback callback, object asyncState) {
+            PhoneApp.ServiceReference.OLobbyRoom lobbyRoom = ((PhoneApp.ServiceReference.OLobbyRoom)(inValues[0]));
+            return ((PhoneApp.ServiceReference.IService1)(this)).BeginUpdateGame(lobbyRoom, callback, asyncState);
+        }
+        
+        private object[] OnEndUpdateGame(System.IAsyncResult result) {
+            ((PhoneApp.ServiceReference.IService1)(this)).EndUpdateGame(result);
+            return null;
+        }
+        
+        private void OnUpdateGameCompleted(object state) {
+            if ((this.UpdateGameCompleted != null)) {
+                InvokeAsyncCompletedEventArgs e = ((InvokeAsyncCompletedEventArgs)(state));
+                this.UpdateGameCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(e.Error, e.Cancelled, e.UserState));
+            }
+        }
+        
+        public void UpdateGameAsync(PhoneApp.ServiceReference.OLobbyRoom lobbyRoom) {
+            this.UpdateGameAsync(lobbyRoom, null);
+        }
+        
+        public void UpdateGameAsync(PhoneApp.ServiceReference.OLobbyRoom lobbyRoom, object userState) {
+            if ((this.onBeginUpdateGameDelegate == null)) {
+                this.onBeginUpdateGameDelegate = new BeginOperationDelegate(this.OnBeginUpdateGame);
+            }
+            if ((this.onEndUpdateGameDelegate == null)) {
+                this.onEndUpdateGameDelegate = new EndOperationDelegate(this.OnEndUpdateGame);
+            }
+            if ((this.onUpdateGameCompletedDelegate == null)) {
+                this.onUpdateGameCompletedDelegate = new System.Threading.SendOrPostCallback(this.OnUpdateGameCompleted);
+            }
+            base.InvokeAsync(this.onBeginUpdateGameDelegate, new object[] {
+                        lobbyRoom}, this.onEndUpdateGameDelegate, this.onUpdateGameCompletedDelegate, userState);
         }
         
         private System.IAsyncResult OnBeginOpen(object[] inValues, System.AsyncCallback callback, object asyncState) {
@@ -1078,9 +1386,22 @@ namespace PhoneApp.ServiceReference {
                 return _result;
             }
             
-            public void EndSubscribeToLobbyRoom(System.IAsyncResult result) {
+            public bool EndSubscribeToLobbyRoom(System.IAsyncResult result) {
                 object[] _args = new object[0];
-                base.EndInvoke("SubscribeToLobbyRoom", _args, result);
+                bool _result = ((bool)(base.EndInvoke("SubscribeToLobbyRoom", _args, result)));
+                return _result;
+            }
+            
+            public System.IAsyncResult BeginUpdatePlayer(PhoneApp.ServiceReference.OPlayer playa, System.AsyncCallback callback, object asyncState) {
+                object[] _args = new object[1];
+                _args[0] = playa;
+                System.IAsyncResult _result = base.BeginInvoke("UpdatePlayer", _args, callback, asyncState);
+                return _result;
+            }
+            
+            public void EndUpdatePlayer(System.IAsyncResult result) {
+                object[] _args = new object[0];
+                base.EndInvoke("UpdatePlayer", _args, result);
             }
             
             public System.IAsyncResult BeginMakePlayer(string username, System.AsyncCallback callback, object asyncState) {
@@ -1106,6 +1427,18 @@ namespace PhoneApp.ServiceReference {
             public void EndChangeTurn(System.IAsyncResult result) {
                 object[] _args = new object[0];
                 base.EndInvoke("ChangeTurn", _args, result);
+            }
+            
+            public System.IAsyncResult BeginUpdateGame(PhoneApp.ServiceReference.OLobbyRoom lobbyRoom, System.AsyncCallback callback, object asyncState) {
+                object[] _args = new object[1];
+                _args[0] = lobbyRoom;
+                System.IAsyncResult _result = base.BeginInvoke("UpdateGame", _args, callback, asyncState);
+                return _result;
+            }
+            
+            public void EndUpdateGame(System.IAsyncResult result) {
+                object[] _args = new object[0];
+                base.EndInvoke("UpdateGame", _args, result);
             }
         }
     }

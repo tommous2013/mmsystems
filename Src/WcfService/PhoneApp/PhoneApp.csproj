@@ -66,7 +66,6 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\BuildStatusEnum.cs" />
-    <Compile Include="Models\Settlement.cs" />
     <Compile Include="Models\Shuffle.cs" />
     <Compile Include="Service References\ServiceReference\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -194,6 +193,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServiceReference\Service12.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServiceReference\Service13.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>

@@ -44,7 +44,7 @@ namespace PhoneApp.ViewModels
                             where room.TheLobby.IsWaitingForPlayers == true
                             select room;
             LobbyRoomList.Clear();
-            foreach (OLobbyRoom room in q)
+            foreach (var room in q)
             {
                 LobbyRoomList.Add(room);
             }
@@ -61,11 +61,25 @@ namespace PhoneApp.ViewModels
 
         }
 
-        void Client_SubscribeToLobbyRoomCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        void Client_SubscribeToLobbyRoomCompleted(object sender, SubscribeToLobbyRoomCompletedEventArgs e)
         {
-            (App.Current.RootVisual as PhoneApplicationFrame).Navigate(
+            if (e.Result)
+            {
+                (App.Current.RootVisual as PhoneApplicationFrame).Navigate(
                 new Uri("/Views/WaitingPage.xaml", UriKind.Relative));
+            }
+            else
+            {
+                MessageBox.Show("Error: lobby is full or something else went wrong");
+            }
+            
         }
+
+        //void Client_SubscribeToLobbyRoomCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        //{
+        //    (App.Current.RootVisual as PhoneApplicationFrame).Navigate(
+        //        new Uri("/Views/WaitingPage.xaml", UriKind.Relative));
+        //}
 
         public void CreateLobby()
         {

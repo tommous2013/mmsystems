@@ -131,7 +131,7 @@
 
     </Grid>
     <phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar x:Name="AppBar" IsVisible="True" IsMenuEnabled="false">
+        <shell:ApplicationBar x:Name="AppBar" IsVisible="False" IsMenuEnabled="false">
             <shell:ApplicationBarIconButton x:Name="Fin" IconUri="/Images/appbar_button1.png" Text="Finished" Click="Fin_Click" />
             <shell:ApplicationBarIconButton x:Name="Build" IconUri="/Images/appbar_button2.png" Text="Build" Click="Build_Click"/>
             <!--<shell:ApplicationBar.MenuItems>

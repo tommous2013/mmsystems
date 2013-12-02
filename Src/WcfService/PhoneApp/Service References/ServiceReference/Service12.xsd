@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/WcfService.DTO" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/WcfService.DTO" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://catan3.cloudapp.net/Service1.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/System.Drawing" />
   <xs:complexType name="OPlayer">
     <xs:sequence>
       <xs:element minOccurs="0" name="Brick" type="xs:int" />
@@ -34,9 +35,42 @@
       <xs:element minOccurs="0" name="IsWaitingForPlayers" type="xs:boolean" />
       <xs:element minOccurs="0" name="LobbyId" type="xs:int" />
       <xs:element minOccurs="0" name="LobbyName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Roads" nillable="true" type="tns:ArrayOfORoad" />
+      <xs:element minOccurs="0" name="Settlements" nillable="true" type="tns:ArrayOfOSettlement" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="OLobby" nillable="true" type="tns:OLobby" />
+  <xs:complexType name="ArrayOfORoad">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ORoad" nillable="true" type="tns:ORoad" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfORoad" nillable="true" type="tns:ArrayOfORoad" />
+  <xs:complexType name="ORoad">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ImageUrl" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Owner" nillable="true" type="tns:OPlayer" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/System.Drawing" minOccurs="0" name="Position" type="q1:Point" />
+      <xs:element minOccurs="0" name="RoadId" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ORoad" nillable="true" type="tns:ORoad" />
+  <xs:complexType name="ArrayOfOSettlement">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="OSettlement" nillable="true" type="tns:OSettlement" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfOSettlement" nillable="true" type="tns:ArrayOfOSettlement" />
+  <xs:complexType name="OSettlement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:ORoad">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Upgraded" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="OSettlement" nillable="true" type="tns:OSettlement" />
   <xs:complexType name="ArrayOfOLobby">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="OLobby" nillable="true" type="tns:OLobby" />

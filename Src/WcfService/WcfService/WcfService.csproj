@@ -20,6 +20,8 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <SilverlightApplicationList>
+    </SilverlightApplicationList>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -82,7 +84,11 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ClientBin\SilverlightApplication1.xap" />
     <Content Include="Service1.svc" />
+    <Content Include="Silverlight.js" />
+    <Content Include="SilverlightApplication1TestPage.aspx" />
+    <Content Include="SilverlightApplication1TestPage.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +100,8 @@
     <Compile Include="DTO\OLobby.cs" />
     <Compile Include="DTO\OLobbyRoom.cs" />
     <Compile Include="DTO\OPlayer.cs" />
+    <Compile Include="DTO\ORoad.cs" />
+    <Compile Include="DTO\OSettlement.cs" />
     <Compile Include="Service1.svc.cs">
       <DependentUpon>Service1.svc</DependentUpon>
     </Compile>
@@ -122,6 +130,7 @@
       <DependentUpon>DataClasses.dbml</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

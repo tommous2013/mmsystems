@@ -29,15 +29,18 @@ namespace WcfService
         void StartPlay(OPlayer hostPlayer);
 
         [OperationContract]
-        void SubscribeToLobbyRoom(OPlayer player, OLobbyRoom lobby);
+        bool SubscribeToLobbyRoom(OPlayer player, OLobbyRoom lobby);
 
-        //[OperationContract]
-        //OPlayer GetPlayer(int id);
+        [OperationContract]
+        void UpdatePlayer(OPlayer playa);
 
         [OperationContract]
         OPlayer MakePlayer(string username);
 
         [OperationContract]
         void ChangeTurn(OLobbyRoom lobbyRoom);
+
+        [OperationContract]
+        void UpdateGame(OLobbyRoom lobbyRoom);
     }
 }

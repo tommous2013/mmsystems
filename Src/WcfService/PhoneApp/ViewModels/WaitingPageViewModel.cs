@@ -11,11 +11,13 @@ namespace PhoneApp.ViewModels
 {
     public class WaitingPageViewModel : ViewModelBase
     {
+        private DispatcherTimer pollTimer ;
         public WaitingPageViewModel()
         {
             App.Client = new Service1Client();
+
             GetPlayers();
-            DispatcherTimer pollTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
+            pollTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
             pollTimer.Tick += newTimer_Tick;
             pollTimer.Start();
         }
@@ -47,38 +49,16 @@ namespace PhoneApp.ViewModels
 
         void Client_GetAvailableLobbyRoomsCompleted(object sender, GetAvailableLobbyRoomsCompletedEventArgs e)
         {
-            try
+            var q = (from room in e.Result
+                     where room.TheLobby.LobbyId == App.LobbyRoom.TheLobby.LobbyId
+                     select room).First();
+            App.LobbyRoom = q;
+            if (PlayerList != null && PlayerList.Count >= 4)
             {
-                var q = (from room in e.Result
-                         where room.TheLobby.LobbyId == App.LobbyRoom.TheLobby.LobbyId
-                         select room).First();
-
-                App.LobbyRoom = q;
-                if (PlayerList != null && PlayerList.Count >= 4)
-                {
-                    (App.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri("/Views/GamePage.xaml", UriKind.Relative));
-                    //StartGame();
-                }
-                PlayerList = q.PlayerList;
+                pollTimer.Stop();
+                (App.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri("/Views/GamePage.xaml", UriKind.Relative));
             }
-            catch (Exception)
-            {
-                throw;
-            }
-
-        }
-
-        public void StartGame()
-        {
-            App.Client.StartPlayCompleted += Client_StartPlayCompleted;
-            App.Client.StartPlayAsync(App.LobbyRoom.HostPlayer);
-
-        }
-
-        void Client_StartPlayCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
-        {
-            (App.Current.RootVisual as PhoneApplicationFrame).Navigate(
-                new Uri("/Views/GamePage.xaml", UriKind.Relative));
+            PlayerList = q.PlayerList;
         }
     }
 }

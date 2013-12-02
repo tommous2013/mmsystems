@@ -23,11 +23,12 @@
     <MetadataSource Address="http://catan3.cloudapp.net/service1.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="Service1.xsd" MetadataType="Schema" ID="b485df9a-a4c7-430a-b88e-7ec03e405838" SourceId="1" SourceUrl="http://catan3.cloudapp.net/Service1.svc?xsd=xsd1" />
-    <MetadataFile FileName="Service11.xsd" MetadataType="Schema" ID="37021d32-c227-486f-b8e0-7a7ceab1ebd3" SourceId="1" SourceUrl="http://catan3.cloudapp.net/Service1.svc?xsd=xsd0" />
     <MetadataFile FileName="Service12.xsd" MetadataType="Schema" ID="67fe3446-00d6-4154-b54d-35c1a7173c98" SourceId="1" SourceUrl="http://catan3.cloudapp.net/Service1.svc?xsd=xsd2" />
-    <MetadataFile FileName="Service1.wsdl" MetadataType="Wsdl" ID="cbf58f9e-0610-4af8-b9ed-d5dc56f3e540" SourceId="1" SourceUrl="http://catan3.cloudapp.net/Service1.svc?wsdl" />
+    <MetadataFile FileName="Service11.xsd" MetadataType="Schema" ID="37021d32-c227-486f-b8e0-7a7ceab1ebd3" SourceId="1" SourceUrl="http://catan3.cloudapp.net/Service1.svc?xsd=xsd0" />
     <MetadataFile FileName="Service1.disco" MetadataType="Disco" ID="12e3f9cb-95c7-4717-ab18-cc38969b933c" SourceId="1" SourceUrl="http://catan3.cloudapp.net/Service1.svc?disco" />
+    <MetadataFile FileName="Service13.xsd" MetadataType="Schema" ID="f375465f-bcab-4c77-8236-3fa326dd4ac3" SourceId="1" SourceUrl="http://catan3.cloudapp.net/Service1.svc?xsd=xsd3" />
+    <MetadataFile FileName="Service1.wsdl" MetadataType="Wsdl" ID="cbf58f9e-0610-4af8-b9ed-d5dc56f3e540" SourceId="1" SourceUrl="http://catan3.cloudapp.net/Service1.svc?wsdl" />
+    <MetadataFile FileName="Service1.xsd" MetadataType="Schema" ID="b485df9a-a4c7-430a-b88e-7ec03e405838" SourceId="1" SourceUrl="http://catan3.cloudapp.net/Service1.svc?xsd=xsd1" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
