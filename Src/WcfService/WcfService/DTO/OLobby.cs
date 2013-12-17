@@ -19,6 +19,9 @@ namespace WcfService.DTO
         public bool IsWaitingForPlayers { get; set; }
 
         [DataMember]
+        public bool IsUpdate { get; set; }
+
+        [DataMember]
         public int DiceNum { get; set; }
 
         [DataMember]

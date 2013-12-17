@@ -7,6 +7,7 @@
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
@@ -18,72 +19,99 @@
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1.5*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Canvas x:Name="Can" Tap="Can_Tap"></Canvas>
+        <Canvas x:Name="Can" Tap="Can_Tap">
+            <toolkit:GestureService.GestureListener>
+                <toolkit:GestureListener
+                        PinchStarted="OnPinchStarted"
+                        PinchDelta="OnPinchDelta"
+                        DragDelta="OnDragDelta"
+                        DoubleTap="OnDoubleTap"/>
+            </toolkit:GestureService.GestureListener>
+            <Canvas.RenderTransform>
+                <CompositeTransform
+                        ScaleX="1" ScaleY="1"
+                        TranslateX="0" TranslateY="0"/>
+            </Canvas.RenderTransform>
+        </Canvas>
 
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
+            <Border BorderBrush="SaddleBrown" BorderThickness="5" Grid.Row="0" Grid.Column="0">
+                <Grid x:Name="Player1Grid" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
 
-            <Grid Grid.Row="0" Grid.Column="0">
+                    <Border x:Name="DiceBorder" Grid.Row="0" Grid.Column="0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Image Grid.Row="0" x:Name="DiceImg1"  HorizontalAlignment="Center" VerticalAlignment="Center" ></Image>
+                            <Image Grid.Row="1" x:Name="DiceImg2"  HorizontalAlignment="Center" VerticalAlignment="Center" ></Image>
+
+                        </Grid>
+                    </Border>
+
+                    <StackPanel Grid.Row="0" Grid.Column="1" Margin="10,0,0,0">
+                        <TextBlock Text="{Binding PlayerName}" Foreground="{Binding Color}" FontSize="{StaticResource PhoneFontSizeExtraLarge}"></TextBlock>
+                        <TextBlock Text="{Binding Path=VictoryPoints, StringFormat=Points: \{0\}}" FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="2">
+                        <TextBlock Text="{Binding Path=Wood, StringFormat=Wood: \{0\}}"></TextBlock>
+                        <TextBlock Text="{Binding Path=Brick, StringFormat=Brick: \{0\}}"></TextBlock>
+                        <TextBlock Text="{Binding Path=Wheat, StringFormat=Wheat: \{0\}}"></TextBlock>
+                        <TextBlock Text="{Binding Path=IronOre, StringFormat=IronOre: \{0\}}"></TextBlock>
+                        <TextBlock Text="{Binding Path=Sheep, StringFormat=Sheep: \{0\}}"></TextBlock>
+                    </StackPanel>
+                    
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1" Grid.Column="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Row="0" Grid.Column="0">
-                    <TextBlock Text="{Binding PlayerName}"></TextBlock>
-                    <TextBlock Text="{Binding Wood}"></TextBlock>
-                    <TextBlock Text="{Binding Brick}"></TextBlock>
+                
+                <StackPanel x:Name="Playerstk1" Grid.Column="0">
+                    <TextBlock Text="{Binding PlayerName}" Foreground="{Binding Color}" FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
+                    <TextBlock Text="{Binding Path=VictoryPoints, StringFormat=Points: \{0\}}"></TextBlock>
+                    <TextBlock x:Name="TotalResources1"></TextBlock>
                 </StackPanel>
-                <StackPanel Grid.Row="0" Grid.Column="1">
-                    <TextBlock Text="{Binding Grain}"></TextBlock>
-                    <TextBlock Text="{Binding IronOre}"></TextBlock>
-                    <TextBlock Text="{Binding Sheep}"></TextBlock>
+                <StackPanel x:Name="Playerstk2" Grid.Column="1">
+                    <TextBlock Text="{Binding PlayerName}" Foreground="{Binding Color}" FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
+                    <TextBlock Text="{Binding Path=VictoryPoints, StringFormat=Points: \{0\}}"></TextBlock>
+                    <TextBlock x:Name="TotalResources2"></TextBlock>
                 </StackPanel>
+                <StackPanel x:Name="Playerstk3" Grid.Column="2">
+                    <TextBlock Text="{Binding PlayerName}" Foreground="{Binding Color}" FontSize="{StaticResource PhoneFontSizeLarge}"></TextBlock>
+                    <TextBlock Text="{Binding Path=VictoryPoints, StringFormat=Points: \{0\}}"></TextBlock>
+                    <TextBlock x:Name="TotalResources3"></TextBlock>
+                </StackPanel>
+                
             </Grid>
-
-
-            <StackPanel x:Name="Player2Stkpnl" Grid.Row="0" Grid.Column="2">
-                <TextBlock Text="{Binding PlayerName}"></TextBlock>
-                <TextBlock Text="{Binding Wood}"></TextBlock>
-                <TextBlock Text="{Binding Brick}"></TextBlock>
-                <TextBlock Text="{Binding Grain}"></TextBlock>
-                <TextBlock Text="{Binding IronOre}"></TextBlock>
-                <TextBlock Text="{Binding Sheep}"></TextBlock>
-            </StackPanel>
-
-            <StackPanel x:Name="Player3Stkpnl" Grid.Row="1" Grid.Column="0">
-                <TextBlock Text="{Binding PlayerName}"></TextBlock>
-                <TextBlock Text="{Binding Wood}"></TextBlock>
-                <TextBlock Text="{Binding Brick}"></TextBlock>
-                <TextBlock Text="{Binding Grain}"></TextBlock>
-                <TextBlock Text="{Binding IronOre}"></TextBlock>
-                <TextBlock Text="{Binding Sheep}"></TextBlock>
-            </StackPanel>
-
-            <StackPanel x:Name="Player4Stkpnl" Grid.Row="1" Grid.Column="2">
-                <TextBlock Text="{Binding PlayerName}"></TextBlock>
-                <TextBlock Text="{Binding Wood}"></TextBlock>
-                <TextBlock Text="{Binding Brick}"></TextBlock>
-                <TextBlock Text="{Binding Grain}"></TextBlock>
-                <TextBlock Text="{Binding IronOre}"></TextBlock>
-                <TextBlock Text="{Binding Sheep}"></TextBlock>
-            </StackPanel>
-
-
+            
         </Grid>
+
+
+
+
+
         <Popup x:Name="BuildPopup" Margin="10" Grid.Row="0" >
             <Border BorderThickness="2" BorderBrush="{StaticResource PhoneAccentBrush}" HorizontalAlignment="Stretch">
-            <StackPanel Background="DimGray" HorizontalAlignment="Center">
+                <StackPanel Background="DimGray" HorizontalAlignment="Center">
                     <TextBlock Text="Building Costs" TextAlignment="Center" FontSize="40" Margin="10,0" />
                     <StackPanel Orientation="Vertical" Margin="0,10">
                         <StackPanel Orientation="Horizontal" Background="Gray" HorizontalAlignment="Center" Margin="10">
@@ -121,7 +149,8 @@
                                 <TextBlock Text="1 x Sheep"></TextBlock>
                                 <TextBlock Text="1 x IronOre"></TextBlock>
                             </StackPanel>
-                            <Button Content="Buy" Click="Buy_Dev_Click" IsEnabled="False"></Button> <!--nog niet geimplimenteerd--> 
+                            <Button Content="Buy" Click="Buy_Dev_Click" IsEnabled="False"></Button>
+                            <!--nog niet geimplimenteerd-->
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>

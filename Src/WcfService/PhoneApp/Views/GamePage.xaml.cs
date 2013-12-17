@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Threading;
@@ -130,44 +132,85 @@ namespace PhoneApp.Views
 
         }
 
-        public int Dice
+        void _pollTimer2_Tick(object sender, EventArgs e)
         {
-            get
-            {
-                return _dice;
-            }
-            set
-            {
-                _dice = _r.Next(2, 12);
-                MessageBox.Show(_dice.ToString());
-                App.Client.UpdateGameAsync(App.LobbyRoom);
-            }
+            App.Client.GetALobbyRoomAsync(App.LobbyRoom.TheLobby);
         }
 
-        void pollTimer_Tick(object sender, EventArgs e)
+        public int GetTotalResources(OPlayer p)
         {
-            App.Client.GetALobbyRoomCompleted += Client_GetALobbyRoomCompleted;
-            App.Client.GetALobbyRoomAsync(App.LobbyRoom.TheLobby);
+            return p.IronOre + p.Wheat + p.Wood + p.Brick + p.Sheep;
         }
 
         void Client_GetALobbyRoomCompleted(object sender, GetALobbyRoomCompletedEventArgs e)
         {
             App.LobbyRoom = e.Result;
+            Player1Grid.DataContext = App.Me;
             App.Me = (from player in e.Result.PlayerList
                       where player.PlayerId == App.Me.PlayerId
                       select player).First();
+            var plList = e.Result.PlayerList.Where(p => p.PlayerId != App.Me.PlayerId).ToList();
+
+            Playerstk1.DataContext = plList.ElementAt(0);
+            TotalResources1.Text = "# resources: " + GetTotalResources(plList.ElementAt(0)).ToString();
+            Playerstk2.DataContext = plList.ElementAt(1);
+            TotalResources2.Text = "# resources: " + GetTotalResources(plList.ElementAt(1)).ToString();
+            Playerstk3.DataContext = plList.ElementAt(2);
+            TotalResources3.Text = "# resources: " + GetTotalResources(plList.ElementAt(2)).ToString();
+
+
             if (App.Me.MyTurn && !_haveRolled)
             {
                 _haveRolled = true;
                 ApplicationBar.IsVisible = true;
-                Dice = 0; // any set will give new random num
+
                 if (_gameState == GameState.FirstTurn || _gameState == GameState.SecondTurn)
                 {
                     MessageBox.Show("Place a settlement and a road");
                     _placedHouse = false;
                     _placedRoad = false;
                 }
+                else
+                {
+                    App.LobbyRoom.TheLobby.DiceNum = _r.Next(2, 12);
+                    MessageBox.Show(App.LobbyRoom.TheLobby.DiceNum.ToString());
+                    App.LobbyRoom.TheLobby.IsUpdate = true;
+                    App.Client.UpdateGameAsync(App.LobbyRoom);
+                }
             }
+            try
+            {
+                if (_currentPlayerId != e.Result.PlayerList.First(p => p.MyTurn).PlayerId && _gameState != GameState.NormalPlay)
+                {
+                    _currentPlayerId = e.Result.PlayerList.First(p => p.MyTurn).PlayerId;
+                }
+
+                if (_currentPlayerId != e.Result.PlayerList.First(p => p.MyTurn).PlayerId && _gameState == GameState.NormalPlay && App.LobbyRoom.TheLobby.IsUpdate)
+                {
+                    DiceBorder.Background = new SolidColorBrush(Colors.White);
+                    _currentPlayerId = e.Result.PlayerList.First(p => p.MyTurn).PlayerId;
+                    GetResources();
+                    GetVictory();
+                    MessageBox.Show(App.Me.IronOre.ToString() + App.Me.Sheep.ToString() +
+                                    App.Me.Wheat.ToString() + App.Me.Wood.ToString() + App.Me.Brick.ToString());
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            if (App.LobbyRoom.TheLobby.DiceNum % 2 == 0)
+            {
+                DiceImg1.Source = new BitmapImage(new Uri(@"\Images\Dice\" + App.LobbyRoom.TheLobby.DiceNum / 2 + ".png", UriKind.Relative));
+                DiceImg2.Source = new BitmapImage(new Uri(@"\Images\Dice\" + App.LobbyRoom.TheLobby.DiceNum / 2 + ".png", UriKind.Relative));
+            }
+            else
+            {
+                DiceImg1.Source = new BitmapImage(new Uri(@"\Images\Dice\" + (App.LobbyRoom.TheLobby.DiceNum / 2 + 1).ToString() + ".png", UriKind.Relative));
+                DiceImg2.Source = new BitmapImage(new Uri(@"\Images\Dice\" + App.LobbyRoom.TheLobby.DiceNum / 2 + ".png", UriKind.Relative));
+            }
+
             UpdateGameMap();
         }
 
@@ -177,9 +220,9 @@ namespace PhoneApp.Views
 
             for (int i = 0; i < _hexPosition.Length / 2; i++)
             {
-                _board[i] = new TileUserContol(_hexArray[i], _numArray[i]);
-                _board[i].SetValue(Canvas.LeftProperty, _hexPosition[i, 0]);
-                _board[i].SetValue(Canvas.TopProperty, _hexPosition[i, 1]);
+                _board[i] = new TileUserContol(_hexArray[i], _numArray[i], new Point() { X = _hexPosition[i, 0], Y = _hexPosition[i, 1] });
+                _board[i].SetValue(Canvas.LeftProperty, _board[i].Position.X);
+                _board[i].SetValue(Canvas.TopProperty, _board[i].Position.Y);
                 Can.Children.Add(_board[i]);
             }
         }
@@ -187,7 +230,6 @@ namespace PhoneApp.Views
         public void UpdateGameMap()
         {
             Can.Children.Clear();
-
 
             foreach (var tile in _board)
             {
@@ -197,22 +239,21 @@ namespace PhoneApp.Views
             {
                 var img = new Image();
                 img.Source = new BitmapImage(new Uri(road.ImageUrl, UriKind.Relative));
-                img.SetValue(Canvas.LeftProperty, (double)road.Position.x);
-                img.SetValue(Canvas.TopProperty, (double)road.Position.y);
+                img.SetValue(Canvas.LeftProperty, (double)road.Position.x + road.ShiftX);
+                img.SetValue(Canvas.TopProperty, (double)road.Position.y + road.ShiftY);
                 Can.Children.Add(img);
-
             }
             foreach (var settlement in App.LobbyRoom.TheLobby.Settlements)
             {
                 var img = new Image();
                 img.Source = new BitmapImage(new Uri(settlement.ImageUrl, UriKind.Relative));
-                img.SetValue(Canvas.LeftProperty, (double)settlement.Position.x);
-                img.SetValue(Canvas.TopProperty, (double)settlement.Position.y);
+                img.SetValue(Canvas.LeftProperty, (double)settlement.Position.x - 50);
+                img.SetValue(Canvas.TopProperty, (double)settlement.Position.y - 50);
                 Can.Children.Add(img);
             }
         }
 
-        private void Can_Tap(object sender, System.Windows.Input.GestureEventArgs e) // todo: opkuisen dubble code verwijderen 
+        private void Can_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             Point p = e.GetPosition(Can);
             var closest2Points = _settlementPoints.Where(point => point != p).
@@ -223,7 +264,7 @@ namespace PhoneApp.Views
             {
                 if (_buildStatus == BuildStatusEnum.Settlement || (_gameState == GameState.FirstTurn || _gameState == GameState.SecondTurn) && _placedHouse == false)
                 {
-                    _placedHouse = true;
+
                     if (App.LobbyRoom.TheLobby.Settlements == null)
                     {
                         App.LobbyRoom.TheLobby.Settlements = new ObservableCollection<OSettlement>();
@@ -236,29 +277,29 @@ namespace PhoneApp.Views
                                 Position =
                                     new ServiceReference.Point()
                                         {
-                                            x = (int)closest2Points.First().X - 50,
-                                            y = (int)closest2Points.First().Y - 50
+                                            x = (int)closest2Points.First().X,
+                                            y = (int)closest2Points.First().Y
                                         },
                                 Owner = App.Me,
                                 RoadId = -1,
                                 Upgraded = false
                             };
 
-                        var img = new Image { Source = new BitmapImage(new Uri(settl.ImageUrl, UriKind.Relative)) };
-                        img.SetValue(Canvas.LeftProperty, (double)settl.Position.x);
-                        img.SetValue(Canvas.TopProperty, (double)settl.Position.y);
-
-                        Can.Children.Add(img);
                         _buildStatus = BuildStatusEnum.None;
-
+                        App.Me.VictoryPoints++;
+                        App.Client.UpdatePlayerAsync(App.Me);
                         App.LobbyRoom.TheLobby.Settlements.Add(settl);
-
+                        App.Client.UpdateGameCompleted += ClientOnUpdateGameCompleted; // get update wanneer het is geupdate
+                        App.Client.UpdateGameAsync(App.LobbyRoom);
+                        App.LobbyRoom.TheLobby.Settlements.RemoveAt(App.LobbyRoom.TheLobby.Settlements.Count - 1);
+                        _placedHouse = true;
                     }
                 }
                 else if (_buildStatus == BuildStatusEnum.City)
                 {
                     foreach (var settle in App.LobbyRoom.TheLobby.Settlements)
                     {
+<<<<<<< HEAD
                         if (new Point() { X = settle.Position.x + 50, Y = settle.Position.y + 50 } == closest2Points.First())
                         {
                             settle.Upgraded = true;
@@ -269,6 +310,15 @@ namespace PhoneApp.Views
                             img.SetValue(Canvas.TopProperty, (double)settle.Position.y);
 
                             Can.Children.Add(img);
+=======
+                        if (new Point() { X = settle.Position.x, Y = settle.Position.y } == closest2Points.First())
+                        {
+                            App.Me.VictoryPoints++;
+                            App.Client.UpdatePlayerAsync(App.Me);
+                            settle.Upgraded = true;
+                            settle.ImageUrl = @"\Images\Pieces\City\City" + App.Me.Color + ".png";
+                            App.Client.UpdateGameAsync(App.LobbyRoom);
+>>>>>>> 568ca47... Foto's toegevoegd
                             _buildStatus = BuildStatusEnum.None;
                             return;
                         }
@@ -278,6 +328,7 @@ namespace PhoneApp.Views
                 {
                     _placedRoad = true;
                     var road1 = new ORoad() { Owner = App.Me, RoadId = -1 };
+<<<<<<< HEAD
 
                     if (closest2Points.ElementAt(0).Y == closest2Points.ElementAt(1).Y) // horizontal roads
                     {
@@ -296,38 +347,155 @@ namespace PhoneApp.Views
                                 y = (int)closest2Points.ElementAt(0).Y - 50
                             };
                         }
+=======
+
+                    var neighborRoad =
+                        closest2Points.Any(
+                            point =>
+                            App.LobbyRoom.TheLobby.Roads.Any(
+                                road =>
+                                (new Point() { X = road.Position.x, Y = road.Position.y } == point ||
+                                 new Point() { X = road.Position2.x, Y = road.Position2.y } == point) &&
+                                road.Owner.PlayerId == App.Me.PlayerId));
+
+                    var neighborSettlement =
+                        closest2Points.Any(
+                            point =>
+                            App.LobbyRoom.TheLobby.Settlements.Any(
+                                settle => new Point() { X = settle.Position.x, Y = settle.Position.y } == point
+                                && settle.Owner.PlayerId == App.Me.PlayerId)); //check of straat naast settlement ligt
+
+                    if (!neighborSettlement && !neighborRoad)
+                    {
+                        _placedRoad = false;
+                        return;
+                    }
+
+                    if (closest2Points.ElementAt(0).Y == closest2Points.ElementAt(1).Y) // horizontal roads
+                    {
+
+                        road1.ImageUrl = @"\Images\Pieces\Road\Road" + App.Me.Color + "1.png";
+                        road1.Position = new ServiceReference.Point()
+                        {
+                            x = (int)closest2Points.ElementAt(1).X,
+                            y = (int)closest2Points.ElementAt(1).Y
+                        };
+                        road1.Position2 = new ServiceReference.Point()
+                        {
+                            x = (int)closest2Points.ElementAt(0).X,
+                            y = (int)closest2Points.ElementAt(0).Y
+                        };
+
+                        if (closest2Points.ElementAt(0).X < closest2Points.ElementAt(1).X)
+                        {
+                            road1.Position = new ServiceReference.Point()
+                            {
+                                x = (int)closest2Points.ElementAt(0).X,
+                                y = (int)closest2Points.ElementAt(0).Y
+                            };
+                            road1.Position2 = new ServiceReference.Point()
+                            {
+                                x = (int)closest2Points.ElementAt(1).X,
+                                y = (int)closest2Points.ElementAt(1).Y
+                            };
+                        }
+                        road1.ShiftX = -25;
+                        road1.ShiftY = -50;
+>>>>>>> 568ca47... Foto's toegevoegd
                     }
                     else if (closest2Points.ElementAt(0).Y < closest2Points.ElementAt(1).Y) // klik dicht bij laagste punt
                     {
                         if (closest2Points.ElementAt(0).X > closest2Points.ElementAt(1).X)
                         {
                             road1.ImageUrl = @"\Images\Pieces\Road\Road" + App.Me.Color + "3.png";
+<<<<<<< HEAD
                             road1.Position = new ServiceReference.Point() { x = (int)closest2Points.ElementAt(0).X - 55, y = (int)closest2Points.ElementAt(0).Y - 25 };
+=======
+                            road1.Position = new ServiceReference.Point()
+                                {
+                                    x = (int)closest2Points.ElementAt(0).X,
+                                    y = (int)closest2Points.ElementAt(0).Y
+                                };
+                            road1.Position2 = new ServiceReference.Point()
+                            {
+                                x = (int)closest2Points.ElementAt(1).X,
+                                y = (int)closest2Points.ElementAt(1).Y
+                            };
+                            road1.ShiftX = -55;
+>>>>>>> 568ca47... Foto's toegevoegd
                         }
                         else
                         {
                             road1.ImageUrl = @"\Images\Pieces\Road\Road" + App.Me.Color + "2.png";
+<<<<<<< HEAD
                             road1.Position = new ServiceReference.Point() { x = (int)closest2Points.ElementAt(0).X - 40, y = (int)closest2Points.ElementAt(0).Y - 25 };
+=======
+                            road1.Position = new ServiceReference.Point()
+                                {
+                                    x = (int)closest2Points.ElementAt(0).X,
+                                    y = (int)closest2Points.ElementAt(0).Y
+                                };
+                            road1.Position2 = new ServiceReference.Point()
+                                {
+                                    x = (int)closest2Points.ElementAt(1).X,
+                                    y = (int)closest2Points.ElementAt(1).Y
+                                };
+                            road1.ShiftX = -40;
+>>>>>>> 568ca47... Foto's toegevoegd
                         }
+                        road1.ShiftY = -25;
+
                     }
                     else if (closest2Points.ElementAt(0).Y > closest2Points.ElementAt(1).Y) // klik dicht bij hoogste punt
                     {
                         if (closest2Points.ElementAt(0).X < closest2Points.ElementAt(1).X)
                         {
                             road1.ImageUrl = @"\Images\Pieces\Road\Road" + App.Me.Color + "3.png";
+<<<<<<< HEAD
                             road1.Position = new ServiceReference.Point() { x = (int)closest2Points.ElementAt(1).X - 55, y = (int)closest2Points.ElementAt(1).Y - 25 };
+=======
+                            road1.Position = new ServiceReference.Point()
+                                {
+                                    x = (int)closest2Points.ElementAt(1).X,
+                                    y = (int)closest2Points.ElementAt(1).Y
+                                };
+                            road1.Position2 = new ServiceReference.Point()
+                            {
+                                x = (int)closest2Points.ElementAt(0).X,
+                                y = (int)closest2Points.ElementAt(0).Y
+                            };
+                            road1.ShiftX = -55;
+>>>>>>> 568ca47... Foto's toegevoegd
                         }
                         else
                         {
                             road1.ImageUrl = @"\Images\Pieces\Road\Road" + App.Me.Color + "2.png";
+<<<<<<< HEAD
                             road1.Position = new ServiceReference.Point() { x = (int)closest2Points.ElementAt(1).X - 40, y = (int)closest2Points.ElementAt(1).Y - 25 };
+=======
+                            road1.Position = new ServiceReference.Point()
+                                {
+                                    x = (int)closest2Points.ElementAt(1).X,
+                                    y = (int)closest2Points.ElementAt(1).Y
+                                };
+                            road1.Position2 = new ServiceReference.Point()
+                            {
+                                x = (int)closest2Points.ElementAt(0).X,
+                                y = (int)closest2Points.ElementAt(0).Y
+                            };
+                            road1.ShiftX = -40;
+>>>>>>> 568ca47... Foto's toegevoegd
                         }
+                        road1.ShiftY = -25;
                     }
+<<<<<<< HEAD
 
                     var img = new Image { Source = new BitmapImage(new Uri(road1.ImageUrl, UriKind.Relative)) };
                     img.SetValue(Canvas.LeftProperty, (double)road1.Position.x);
                     img.SetValue(Canvas.TopProperty, (double)road1.Position.y);
                     Can.Children.Add(img);
+=======
+>>>>>>> 568ca47... Foto's toegevoegd
                     _buildStatus = BuildStatusEnum.None;
 
                     if (App.LobbyRoom.TheLobby.Roads == null)
@@ -335,9 +503,24 @@ namespace PhoneApp.Views
                         App.LobbyRoom.TheLobby.Roads = new ObservableCollection<ORoad>();
                     }
                     App.LobbyRoom.TheLobby.Roads.Add(road1);
+<<<<<<< HEAD
                 }
                 App.Client.UpdateGameAsync(App.LobbyRoom);
+=======
+                    App.Client.UpdateGameCompleted += ClientOnUpdateGameCompleted;
+                    App.Client.UpdateGameAsync(App.LobbyRoom);
+
+
+                }
+                UpdateGameMap();
+>>>>>>> 568ca47... Foto's toegevoegd
             }
+        }
+
+        private void ClientOnUpdateGameCompleted(object sender, AsyncCompletedEventArgs asyncCompletedEventArgs)
+        {
+            _pollTimer2_Tick(null, EventArgs.Empty);
+            App.Client.UpdateGameCompleted -= ClientOnUpdateGameCompleted; // verwijder hendler zo dat deze niet altijd uitvoert als updateGame klaar is
         }
 
         private double NotReallyDistanceButShouldDo(Point source, Point target)
@@ -347,6 +530,7 @@ namespace PhoneApp.Views
 
         private void Fin_Click(object sender, EventArgs e)
         {
+<<<<<<< HEAD
             if (_buildStatus == BuildStatusEnum.None && _placedRoad && _placedRoad)
             {
                 ApplicationBar.IsVisible = false;
@@ -362,22 +546,80 @@ namespace PhoneApp.Views
             {
                 MessageBox.Show("error" + ": stil need to place: " + _buildStatus.ToString());
             }
+=======
+            if (_buildStatus == BuildStatusEnum.None && _placedRoad && _placedHouse)
+            {
+                _pollTimer2.Tick -= _pollTimer2_Tick;
+
+                if ((int)_gameState <= 1)
+                {
+                    _gameState = _gameState + 1;
+                }
+
+                if (BuildPopup.IsOpen)
+                {
+                    BuildPopup.IsOpen = false;
+                }
+
+                ApplicationBar.IsVisible = false;
+
+                App.LobbyRoom.TheLobby.IsUpdate = false;
+
+                App.Client.UpdateGameCompleted += Client_UpdateGameCompleted;
+                App.Client.UpdateGameAsync(App.LobbyRoom);
+
+            }
+            else
+            {
+                string message = "error";
+                if (_buildStatus == BuildStatusEnum.None)
+                {
+                    if (_placedRoad)
+                        message = " Road";
+
+                    if (_placedHouse)
+                        message = " Settlement";
+                }
+                else
+                    message = _buildStatus.ToString();
+
+                MessageBox.Show("error" + ": stil need to place: " + message);
+            }
+        }
+
+        void Client_UpdateGameCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        {
+            App.Client.ChangeTurnAsync(App.LobbyRoom);
+            App.Client.UpdateGameCompleted -= Client_UpdateGameCompleted;
+        }
+
+        void Client_ChangeTurnCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        {
+            _haveRolled = false;
+            App.Me.MyTurn = false;
+            _pollTimer2.Tick += _pollTimer2_Tick;
+>>>>>>> 568ca47... Foto's toegevoegd
         }
 
         private void Build_Click(object sender, EventArgs e)
         {
             if (App.Me.MyTurn)
+<<<<<<< HEAD
             {
                 BuildPopup.IsOpen = !BuildPopup.IsOpen;
             }
+=======
+                BuildPopup.IsOpen = !BuildPopup.IsOpen;
+>>>>>>> 568ca47... Foto's toegevoegd
         }
 
         private void Buy_Road_Click(object sender, RoutedEventArgs e)
         {
             if (App.Me.Wood >= 1 && App.Me.Brick >= 1)
             {
-                --App.Me.Wood;
-                --App.Me.Brick;
+                App.Me.Wood--;
+                App.Me.Brick--;
+                App.Client.UpdatePlayerAsync(App.Me);
                 _buildStatus = BuildStatusEnum.Road;
                 BuildPopup.IsOpen = false;
                 App.Client.UpdatePlayerAsync(App.Me);
@@ -390,10 +632,11 @@ namespace PhoneApp.Views
         {
             if (App.Me.Wood >= 1 && App.Me.Brick >= 1 && App.Me.Wheat >= 1 && App.Me.Sheep >= 1)
             {
-                --App.Me.Wood;
-                --App.Me.Brick;
-                --App.Me.Wheat;
-                --App.Me.Sheep;
+                App.Me.Wood--;
+                App.Me.Brick--;
+                App.Me.Wheat--;
+                App.Me.Sheep--;
+                App.Client.UpdatePlayerAsync(App.Me);
                 _buildStatus = BuildStatusEnum.Settlement;
                 BuildPopup.IsOpen = false;
                 App.Client.UpdatePlayerAsync(App.Me);
@@ -408,6 +651,7 @@ namespace PhoneApp.Views
             {
                 App.Me.Wheat -= 2;
                 App.Me.IronOre -= 3;
+                App.Client.UpdatePlayerAsync(App.Me);
                 _buildStatus = BuildStatusEnum.City;
                 BuildPopup.IsOpen = false;
                 App.Client.UpdatePlayerAsync(App.Me);
@@ -420,16 +664,322 @@ namespace PhoneApp.Views
         {
             if (App.Me.Wheat >= 1 && App.Me.IronOre >= 1 && App.Me.Sheep >= 1)
             {
-                App.Me.Wheat -= 1;
-                App.Me.IronOre -= 1;
-                App.Me.Sheep -= 1;
+                App.Me.Wheat--;
+                App.Me.IronOre--;
+                App.Me.Sheep--;
+                App.Client.UpdatePlayerAsync(App.Me);
                 _buildStatus = BuildStatusEnum.None;
                 BuildPopup.IsOpen = false;
                 App.Client.UpdatePlayerAsync(App.Me);
             }
             else
                 MessageBox.Show("error: resources");
+<<<<<<< HEAD
+=======
+        }
+>>>>>>> 568ca47... Foto's toegevoegd
 
+        private void GetResources()
+        {
+            var sTile = new List<string>();
+            foreach (var oSettlement in App.LobbyRoom.TheLobby.Settlements.Where(s => s.Owner.PlayerId == App.Me.PlayerId))
+            {
+                sTile.AddRange(AddToList(oSettlement));
+                if (oSettlement.Upgraded)
+                {
+                    sTile.AddRange(AddToList(oSettlement));
+                }
+            }
+
+            foreach (var s in sTile.Where(s => s != null))
+            {
+                switch (s)
+                {
+                    case "Wheat":
+                        App.Me.Wheat++;
+                        break;
+                    case "IronOre":
+                        App.Me.IronOre++;
+                        break;
+                    case "Sheep":
+                        App.Me.Sheep++;
+                        break;
+                    case "Brick":
+                        App.Me.Brick++;
+                        break;
+                    case "Wood":
+                        App.Me.Wood++;
+                        break;
+                }
+            }
+            App.Client.UpdatePlayerAsync(App.Me);
+        }
+        public List<string> AddToList(OSettlement oSettlement) // lelijke code
+        {
+            var sTile = new List<string>();
+            try
+            {
+                sTile.Add(_board.Single(b => b.Position.X == oSettlement.Position.x - 25 && b.Position.Y == oSettlement.Position.y - 10 && b.TileNum == App.LobbyRoom.TheLobby.DiceNum).Resource);
+            }
+            catch (Exception)
+            {
+
+            }
+            try
+            {
+                sTile.Add(_board.Single(b => b.Position.X == oSettlement.Position.x - 95 && b.Position.Y == oSettlement.Position.y - 50 && b.TileNum == App.LobbyRoom.TheLobby.DiceNum).Resource);
+            }
+            catch (Exception)
+            {
+
+            }
+            try
+            {
+                sTile.Add(_board.Single(b => b.Position.X == oSettlement.Position.x - 25 && b.Position.Y == oSettlement.Position.y - 90 && b.TileNum == App.LobbyRoom.TheLobby.DiceNum).Resource);
+            }
+            catch (Exception)
+            {
+
+            }
+            try
+            {
+                sTile.Add(_board.Single(b => b.Position.X == oSettlement.Position.x - 5 && b.Position.Y == oSettlement.Position.y - 50 && b.TileNum == App.LobbyRoom.TheLobby.DiceNum).Resource);
+            }
+            catch (Exception)
+            {
+
+            }
+            try
+            {
+                sTile.Add(_board.Single(b => b.Position.X == oSettlement.Position.x - 75 && b.Position.Y == oSettlement.Position.y - 10 && b.TileNum == App.LobbyRoom.TheLobby.DiceNum).Resource);
+            }
+            catch
+            {
+
+            }
+            try
+            {
+                sTile.Add(_board.Single(b => b.Position.X == oSettlement.Position.x - 75 && b.Position.Y == oSettlement.Position.y - 90 && b.TileNum == App.LobbyRoom.TheLobby.DiceNum).Resource);
+            }
+            catch (Exception)
+            {
+
+            }
+            return sTile;
+        }
+
+        # region pinch
+        // these two fields fully define the zoom state:
+        private double TotalImageScale = 1d;
+        private Point ImagePosition = new Point(0, 0);
+
+
+        private const double MAX_IMAGE_ZOOM = 5;
+        private Point _oldFinger1;
+        private Point _oldFinger2;
+        private double _oldScaleFactor;
+
+
+        #region Event handlers
+
+        /// <summary>
+        /// Initializes the zooming operation
+        /// </summary>
+        private void OnPinchStarted(object sender, PinchStartedGestureEventArgs e)
+        {
+            _oldFinger1 = e.GetPosition(Can, 0);
+            _oldFinger2 = e.GetPosition(Can, 1);
+            _oldScaleFactor = 1;
+        }
+
+        /// <summary>
+        /// Computes the scaling and translation to correctly zoom around your fingers.
+        /// </summary>
+        private void OnPinchDelta(object sender, PinchGestureEventArgs e)
+        {
+            var scaleFactor = e.DistanceRatio / _oldScaleFactor;
+            if (!IsScaleValid(scaleFactor))
+                return;
+
+            var currentFinger1 = e.GetPosition(Can, 0);
+            var currentFinger2 = e.GetPosition(Can, 1);
+
+            var translationDelta = GetTranslationDelta(
+                currentFinger1,
+                currentFinger2,
+                _oldFinger1,
+                _oldFinger2,
+                ImagePosition,
+                scaleFactor);
+
+            _oldFinger1 = currentFinger1;
+            _oldFinger2 = currentFinger2;
+            _oldScaleFactor = e.DistanceRatio;
+
+            UpdateImageScale(scaleFactor);
+            UpdateImagePosition(translationDelta);
+        }
+
+        /// <summary>
+        /// Moves the image around following your finger.
+        /// </summary>
+        private void OnDragDelta(object sender, DragDeltaGestureEventArgs e)
+        {
+            var translationDelta = new Point(e.HorizontalChange, e.VerticalChange);
+
+            if (IsDragValid(1, translationDelta))
+                UpdateImagePosition(translationDelta);
+        }
+
+        /// <summary>
+        /// Resets the image scaling and position
+        /// </summary>
+        private void OnDoubleTap(object sender, Microsoft.Phone.Controls.GestureEventArgs e)
+        {
+            ResetImagePosition();
+        }
+
+        #endregion
+
+        #region Utils
+
+        /// <summary>
+        /// Computes the translation needed to keep the image centered between your fingers.
+        /// </summary>
+        private Point GetTranslationDelta(
+            Point currentFinger1, Point currentFinger2,
+            Point oldFinger1, Point oldFinger2,
+            Point currentPosition, double scaleFactor)
+        {
+            var newPos1 = new Point(
+             currentFinger1.X + (currentPosition.X - oldFinger1.X) * scaleFactor,
+             currentFinger1.Y + (currentPosition.Y - oldFinger1.Y) * scaleFactor);
+
+            var newPos2 = new Point(
+             currentFinger2.X + (currentPosition.X - oldFinger2.X) * scaleFactor,
+             currentFinger2.Y + (currentPosition.Y - oldFinger2.Y) * scaleFactor);
+
+            var newPos = new Point(
+                (newPos1.X + newPos2.X) / 2,
+                (newPos1.Y + newPos2.Y) / 2);
+
+            return new Point(
+                newPos.X - currentPosition.X,
+                newPos.Y - currentPosition.Y);
+        }
+
+        /// <summary>
+        /// Updates the scaling factor by multiplying the delta.
+        /// </summary>
+        private void UpdateImageScale(double scaleFactor)
+        {
+            TotalImageScale *= scaleFactor;
+            ApplyScale();
+        }
+
+        /// <summary>
+        /// Applies the computed scale to the image control.
+        /// </summary>
+        private void ApplyScale()
+        {
+            ((CompositeTransform)Can.RenderTransform).ScaleX = TotalImageScale;
+            ((CompositeTransform)Can.RenderTransform).ScaleY = TotalImageScale;
+        }
+
+        /// <summary>
+        /// Updates the image position by applying the delta.
+        /// Checks that the image does not leave empty space around its edges.
+        /// </summary>
+        private void UpdateImagePosition(Point delta)
+        {
+            var newPosition = new Point(ImagePosition.X + delta.X, ImagePosition.Y + delta.Y);
+
+            if (newPosition.X > 0) newPosition.X = 0;
+            if (newPosition.Y > 0) newPosition.Y = 0;
+
+            if ((Can.ActualWidth * TotalImageScale) + newPosition.X < Can.ActualWidth)
+                newPosition.X = Can.ActualWidth - (Can.ActualWidth * TotalImageScale);
+
+            if ((Can.ActualHeight * TotalImageScale) + newPosition.Y < Can.ActualHeight)
+                newPosition.Y = Can.ActualHeight - (Can.ActualHeight * TotalImageScale);
+
+            ImagePosition = newPosition;
+
+            ApplyPosition();
+        }
+
+        /// <summary>
+        /// Applies the computed position to the image control.
+        /// </summary>
+        private void ApplyPosition()
+        {
+            ((CompositeTransform)Can.RenderTransform).TranslateX = ImagePosition.X;
+            ((CompositeTransform)Can.RenderTransform).TranslateY = ImagePosition.Y;
+        }
+
+        /// <summary>
+        /// Resets the zoom to its original scale and position
+        /// </summary>
+        private void ResetImagePosition()
+        {
+            TotalImageScale = 1;
+            ImagePosition = new Point(0, 0);
+            ApplyScale();
+            ApplyPosition();
+        }
+
+        /// <summary>
+        /// Checks that dragging by the given amount won't result in empty space around the image
+        /// </summary>
+        private bool IsDragValid(double scaleDelta, Point translateDelta)
+        {
+            if (ImagePosition.X + translateDelta.X > 0 || ImagePosition.Y + translateDelta.Y > 0)
+                return false;
+
+            if ((Can.ActualWidth * TotalImageScale * scaleDelta) + (ImagePosition.X + translateDelta.X) < Can.ActualWidth)
+                return false;
+
+            if ((Can.ActualHeight * TotalImageScale * scaleDelta) + (ImagePosition.Y + translateDelta.Y) < Can.ActualHeight)
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Tells if the scaling is inside the desired range
+        /// </summary>
+        private bool IsScaleValid(double scaleDelta)
+        {
+            return (TotalImageScale * scaleDelta >= 1) && (TotalImageScale * scaleDelta <= MAX_IMAGE_ZOOM);
+        }
+
+        #endregion
+        #endregion
+
+        protected override void OnBackKeyPress(CancelEventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to exit?", "Confirm Exit?", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        public void GetVictory()
+        {
+            if (App.LobbyRoom.PlayerList.Any(p => p.VictoryPoints >= 10))
+            {
+                _gameState = GameState.Finished;
+                if (App.LobbyRoom.PlayerList.First(p => p.VictoryPoints >= 10).PlayerId == App.Me.PlayerId)
+                {
+                    (App.Current.RootVisual as PhoneApplicationFrame).Navigate(
+                new Uri("/Views/WaitingPage.xaml", UriKind.Relative));
+                }
+                else
+                {
+                    (App.Current.RootVisual as PhoneApplicationFrame).Navigate(
+                new Uri("/Views/WaitingPage.xaml", UriKind.Relative));
+                }
+            }
         }
     }
 }

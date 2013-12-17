@@ -10,6 +10,7 @@
       <xs:element minOccurs="0" name="PlayerId" type="xs:int" />
       <xs:element minOccurs="0" name="PlayerName" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Sheep" type="xs:int" />
+      <xs:element minOccurs="0" name="VictoryPoints" type="xs:int" />
       <xs:element minOccurs="0" name="Wheat" type="xs:int" />
       <xs:element minOccurs="0" name="Wood" type="xs:int" />
     </xs:sequence>
@@ -32,6 +33,7 @@
   <xs:complexType name="OLobby">
     <xs:sequence>
       <xs:element minOccurs="0" name="DiceNum" type="xs:int" />
+      <xs:element minOccurs="0" name="IsUpdate" type="xs:boolean" />
       <xs:element minOccurs="0" name="IsWaitingForPlayers" type="xs:boolean" />
       <xs:element minOccurs="0" name="LobbyId" type="xs:int" />
       <xs:element minOccurs="0" name="LobbyName" nillable="true" type="xs:string" />
@@ -51,7 +53,14 @@
       <xs:element minOccurs="0" name="ImageUrl" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="Owner" nillable="true" type="tns:OPlayer" />
       <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/System.Drawing" minOccurs="0" name="Position" type="q1:Point" />
+<<<<<<< HEAD
       <xs:element minOccurs="0" name="RoadId" type="xs:int" />
+=======
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/System.Drawing" minOccurs="0" name="Position2" type="q2:Point" />
+      <xs:element minOccurs="0" name="RoadId" type="xs:int" />
+      <xs:element minOccurs="0" name="ShiftX" type="xs:int" />
+      <xs:element minOccurs="0" name="ShiftY" type="xs:int" />
+>>>>>>> 568ca47... Foto's toegevoegd
     </xs:sequence>
   </xs:complexType>
   <xs:element name="ORoad" nillable="true" type="tns:ORoad" />

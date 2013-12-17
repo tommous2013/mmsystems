@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Windows;
@@ -20,6 +21,15 @@ namespace PhoneApp.Views
             InitializeComponent();
             vm = new WaitingPageViewModel();
             this.DataContext = vm;
+        }
+        protected override void OnBackKeyPress(CancelEventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to exit?", "Confirm Exit?",
+                                    MessageBoxButton.OKCancel) != MessageBoxResult.OK)
+            {
+                e.Cancel = true;
+
+            }
         }
     }
 }

@@ -15,13 +15,14 @@ namespace PhoneApp.Views
 {
     public partial class TileUserContol : UserControl
     {
-        public TileUserContol(string resource, int num)
+        public TileUserContol(string resource, int num, Point pos)
         {
             InitializeComponent();
             HexSource.Source = new BitmapImage(new Uri("/Images/Map/" + resource + ".png", UriKind.Relative));
             NumSource.Source = new BitmapImage(new Uri("/Images/Nums/" + num + ".png", UriKind.Relative));
             TileNum = num;
             Resource = resource;
+            Position = pos;
         }
 
         private int _tileNum;
@@ -45,5 +46,7 @@ namespace PhoneApp.Views
                 //OnPropertyChanged("Resource");
             }
         }
+
+        public Point Position { get; set; }
     }
 }

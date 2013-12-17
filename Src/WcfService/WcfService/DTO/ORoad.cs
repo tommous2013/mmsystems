@@ -17,6 +17,15 @@ namespace WcfService.DTO
         [DataMember]
         public Point Position { get; set; }
         [DataMember]
+<<<<<<< HEAD
+=======
+        public Point Position2 { get; set; }
+        [DataMember]
+        public int ShiftX { get; set; }
+        [DataMember]
+        public int ShiftY { get; set; }
+        [DataMember]
+>>>>>>> 568ca47... Foto's toegevoegd
         public OPlayer Owner { get; set; }
     }
 }

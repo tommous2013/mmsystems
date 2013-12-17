@@ -30,6 +30,8 @@ namespace WcfService
             lobby.LobbyName = host.PlayerName + "'s lobby";
             lobby.LobbyId = ++maxLobId;
             lobby.IsWaitingForPlayers = true;
+            lobby.IsUpdate = false;
+            lobby.DiceRollllllllllllllllllllol = 0;
 
             PlayLobby pLobby = new PlayLobby();
             pLobby.HostPlayer = host.PlayerId;
@@ -40,11 +42,11 @@ namespace WcfService
             dc.Lobbies.InsertOnSubmit(lobby);
             dc.SubmitChanges();
 
-            return new OLobbyRoom()
+            return new OLobbyRoom
                 {
                     HostPlayer = host,
-                    PlayerList = new List<OPlayer>() { host },
-                    TheLobby = new OLobby() { LobbyId = lobby.LobbyId, LobbyName = lobby.LobbyName }
+                    PlayerList = new List<OPlayer> { host },
+                    TheLobby = new OLobby { LobbyId = lobby.LobbyId, LobbyName = lobby.LobbyName, IsUpdate = false }
                 };
         }
 
@@ -54,7 +56,11 @@ namespace WcfService
             var qlob = (from lobby in dc.Lobbies
                         where lobby.LobbyId == lob.LobbyId
                         select lobby).First();
+<<<<<<< HEAD
             result.TheLobby = new OLobby() { IsWaitingForPlayers = (bool)qlob.IsWaitingForPlayers, LobbyId = qlob.LobbyId, LobbyName = qlob.LobbyName };
+=======
+            result.TheLobby = new OLobby { IsWaitingForPlayers = qlob.IsWaitingForPlayers, LobbyId = qlob.LobbyId, LobbyName = qlob.LobbyName };
+>>>>>>> 568ca47... Foto's toegevoegd
             var qplayer = from player in dc.Players
                           join playLobby in dc.PlayLobbies on player.PlayerId equals playLobby.PlayerId
                           where playLobby.LobbyId == lob.LobbyId
@@ -62,7 +68,11 @@ namespace WcfService
             result.PlayerList = new List<OPlayer>();
             foreach (Player player in qplayer)
             {
+<<<<<<< HEAD
                 result.PlayerList.Add(new OPlayer() { MyTurn = player.MyTurn, PlayerId = player.PlayerId, PlayerName = player.PlayerName, Color = player.Color, Brick = player.Brick, Wheat = player.Wheat, IronOre = player.IronOre, Sheep = player.Sheep, Wood = player.Wood });
+=======
+                result.PlayerList.Add(new OPlayer { MyTurn = player.MyTurn, PlayerId = player.PlayerId, PlayerName = player.PlayerName, Color = player.Color, Brick = player.Brick, Wheat = player.Wheat, IronOre = player.IronOre, Sheep = player.Sheep, Wood = player.Wood, VictoryPoints = player.VictoryPoints });
+>>>>>>> 568ca47... Foto's toegevoegd
             }
             var qhost = (from oPlayer in result.PlayerList
                          join playLobby in dc.PlayLobbies on oPlayer.PlayerId equals playLobby.PlayerId
@@ -74,6 +84,7 @@ namespace WcfService
                                 join road in dc.Roads on settlement.RoadID equals road.RoadID
                                 join player in dc.Players on road.OwenrID equals player.PlayerId
                                 where road.LobbyID == result.TheLobby.LobbyId
+<<<<<<< HEAD
                                 select new OSettlement()
                                 {
                                     ImageUrl = road.ImgUrl,
@@ -96,6 +107,41 @@ namespace WcfService
             result.TheLobby.Roads = qRoads;
 
 
+=======
+                                select new OSettlement
+                                    {
+                                        ImageUrl = road.ImgUrl,
+                                        Owner = new OPlayer { Brick = player.Brick, Color = player.Color, IronOre = player.IronOre, MyTurn = player.MyTurn, PlayerId = player.PlayerId, PlayerName = player.PlayerName, Sheep = player.Sheep, Wheat = player.Wheat, Wood = player.Wood },
+                                        Position = new Point(road.PositionX, road.PositionY),
+                                        Upgraded = settlement.Upgraded
+                                    }).ToList();
+
+            result.TheLobby.Settlements = qSettlements;
+            var preQ1 = dc.Roads.Where(r => r.LobbyID == result.TheLobby.LobbyId); // alle roads van de lobby
+            var preQ2 = preQ1.Where(r => !dc.Settlements.Any(s => s.RoadID == r.RoadID)); // alle roads die niet van een settlement zijn
+            var preQ3 = (from road in preQ2
+                         join player in dc.Players on road.OwenrID equals player.PlayerId
+                         select new ORoad
+                             {
+                                 Owner = new OPlayer { Brick = player.Brick, Color = player.Color, IronOre = player.IronOre, MyTurn = player.MyTurn, PlayerId = player.PlayerId, PlayerName = player.PlayerName, Sheep = player.Sheep, Wheat = player.Wheat, Wood = player.Wood },
+                                 Position = new Point(road.PositionX, road.PositionY),
+                                 Position2 = new Point((int)road.PositionX1, (int)road.PositionY2),
+                                 ShiftY = (int)road.ShiftY,
+                                 ShiftX = (int)road.ShiftX,
+                                 ImageUrl = road.ImgUrl
+                             }).ToList();
+            result.TheLobby.Roads = preQ3;
+
+            var dice = (from lobb in dc.Lobbies
+                        where lob.LobbyId == lobb.LobbyId
+                        select lobb.DiceRollllllllllllllllllllol).First();
+
+
+            if (dice != null)
+                result.TheLobby.DiceNum = (int)dice;
+
+            result.TheLobby.IsUpdate = dc.Lobbies.First(l => l.LobbyId == lob.LobbyId).IsUpdate;
+>>>>>>> 568ca47... Foto's toegevoegd
 
             return result;
         }
@@ -103,15 +149,10 @@ namespace WcfService
         public List<OLobby> GetAvailableLobbies()
         {
             var result = from l in dc.Lobbies
-                         where l.IsWaitingForPlayers == true
+                         where l.IsWaitingForPlayers
                          select l;
 
-            List<OLobby> list = new List<OLobby>();
-            foreach (Lobby lobby in result)
-            {
-                list.Add(new OLobby() { LobbyId = lobby.LobbyId, LobbyName = lobby.LobbyName });
-            }
-            return list;
+            return result.Select(lobby => new OLobby { LobbyId = lobby.LobbyId, LobbyName = lobby.LobbyName }).ToList();
         }
 
         public List<OLobbyRoom> GetAvailableLobbyRooms()
@@ -127,20 +168,20 @@ namespace WcfService
                             select pl;
                 var playerlisty = from playLobby in plies
                                   join player in dc.Players on playLobby.PlayerId equals player.PlayerId
-                                  select new OPlayer() { PlayerName = player.PlayerName, PlayerId = player.PlayerId };
+                                  select new OPlayer { PlayerName = player.PlayerName, PlayerId = player.PlayerId };
 
-                var pList = new List<OPlayer>();
-                foreach (OPlayer player in playerlisty)
+                var pList = playerlisty.Select(player => new OPlayer { PlayerName = player.PlayerName, PlayerId = player.PlayerId }).ToList();
+                var hostPlayer = plies.First().HostPlayer;
+                if (hostPlayer != null)
                 {
-                    pList.Add(new OPlayer() { PlayerName = player.PlayerName, PlayerId = player.PlayerId });
+                    var lr = new OLobbyRoom
+                        {
+                            HostPlayer = new OPlayer { PlayerId = (int)hostPlayer },
+                            TheLobby = new OLobby { LobbyId = item.LobbyId, LobbyName = item.LobbyName, IsWaitingForPlayers = item.IsWaitingForPlayers },
+                            PlayerList = pList
+                        };
+                    list.Add(lr);
                 }
-                var lr = new OLobbyRoom()
-                    {
-                        HostPlayer = new OPlayer() { PlayerId = (int)plies.First().HostPlayer },
-                        TheLobby = new OLobby() { LobbyId = item.LobbyId, LobbyName = item.LobbyName, IsWaitingForPlayers = (bool)item.IsWaitingForPlayers },
-                        PlayerList = pList
-                    };
-                list.Add(lr);
             }
             return list;
         }
@@ -156,7 +197,6 @@ namespace WcfService
                           select l).First();
             update.IsWaitingForPlayers = false;
             dc.SubmitChanges();
-
         }
 
         public bool SubscribeToLobbyRoom(OPlayer player, OLobbyRoom lobby)
@@ -164,6 +204,7 @@ namespace WcfService
             try
             {
                 var playersInLobbyBeforeJoining = (from playLobby in dc.PlayLobbies
+<<<<<<< HEAD
                           where playLobby.LobbyId == lobby.TheLobby.LobbyId
                           select playLobby).Count();
 
@@ -207,7 +248,58 @@ namespace WcfService
                     dc.SubmitChanges();
                 }
                 return true;
+=======
+                                                   where playLobby.LobbyId == lobby.TheLobby.LobbyId
+                                                   select playLobby).Count();
 
+                if (playersInLobbyBeforeJoining >= 4)
+                    return false;
+
+                var pLobby = new PlayLobby
+                    {
+                        LobbyId = lobby.TheLobby.LobbyId,
+                        PlayerId = player.PlayerId,
+                        HostPlayer = lobby.HostPlayer.PlayerId
+                    };
+
+                dc.PlayLobbies.InsertOnSubmit(pLobby);
+                dc.SubmitChanges();
+>>>>>>> 568ca47... Foto's toegevoegd
+
+                var playersInLobbyAfterJoining = from playLobby in dc.PlayLobbies
+                                                 where playLobby.LobbyId == lobby.TheLobby.LobbyId
+                                                 select playLobby;
+
+                if (playersInLobbyAfterJoining.Count() >= 4)
+                {
+                    var update = (from l in dc.Lobbies
+                                  where l.LobbyId == lobby.TheLobby.LobbyId
+                                  select l).Single();
+                    update.IsWaitingForPlayers = false;
+                    //dc.SubmitChanges();
+
+                    var a = (from playLobby in dc.PlayLobbies
+                             join player1 in dc.Players on playLobby.PlayerId equals player1.PlayerId
+                             where playLobby.LobbyId == lobby.TheLobby.LobbyId
+                             select player1);
+
+                    a.First().MyTurn = true;
+                    //dc.SubmitChanges();
+
+                    var b = new[] { "White", "Red", "Blue", "Orange" };
+                    int i = 0;
+                    foreach (var p in a)
+                    {
+                        p.Color = b[i++];
+                    }
+                    dc.SubmitChanges();
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                ErrorReport("SubscribeToLobbyRoom catch: " + e.Message);
+                return false;
             }
             catch (Exception e)
             {
@@ -237,7 +329,7 @@ namespace WcfService
                 dc.Players.InsertOnSubmit(pPlayer);
                 dc.SubmitChanges();
 
-                return new OPlayer() { PlayerId = pPlayer.PlayerId, PlayerName = pPlayer.PlayerName };
+                return new OPlayer { PlayerId = pPlayer.PlayerId, PlayerName = pPlayer.PlayerName };
             }
             catch (Exception)
             {
@@ -258,14 +350,26 @@ namespace WcfService
             q.Brick = playa.Brick;
             q.Color = playa.Color;
             q.MyTurn = playa.MyTurn;
+<<<<<<< HEAD
+=======
+            q.VictoryPoints = playa.VictoryPoints;
+>>>>>>> 568ca47... Foto's toegevoegd
             dc.SubmitChanges();
         }
 
         public void ChangeTurn(OLobbyRoom lobbyRoom)
         {
+<<<<<<< HEAD
             bool turn = false;
             foreach (var oPlayer in lobbyRoom.PlayerList)
             {
+=======
+            //dc.Lobbies.First(l => l.LobbyId == lobbyRoom.TheLobby.LobbyId).IsUpdate = true;
+            bool turn = false;
+            foreach (var oPlayer in lobbyRoom.PlayerList)
+            {
+                //ErrorReport(oPlayer.PlayerId + " " + oPlayer.MyTurn + " 1" + DateTime.Now);
+>>>>>>> 568ca47... Foto's toegevoegd
                 if (oPlayer.MyTurn)
                 {
                     turn = true;
@@ -278,6 +382,10 @@ namespace WcfService
                     oPlayer.MyTurn = true;
                     UpdatePlayer(oPlayer);
                 }
+<<<<<<< HEAD
+=======
+                //ErrorReport(oPlayer.PlayerId + " " + oPlayer.MyTurn + " 2" + DateTime.Now);
+>>>>>>> 568ca47... Foto's toegevoegd
             }
             if (lobbyRoom.PlayerList.All(p => p.MyTurn == false))
             {
@@ -290,7 +398,11 @@ namespace WcfService
         {
             try
             {
+<<<<<<< HEAD
 
+=======
+                dc.Lobbies.First(l => l.LobbyId == lobbyRoom.TheLobby.LobbyId).IsUpdate = lobbyRoom.TheLobby.IsUpdate;
+>>>>>>> 568ca47... Foto's toegevoegd
 
                 var qRoads = from oRoad in lobbyRoom.TheLobby.Roads
                              where oRoad.RoadId == -1
@@ -298,6 +410,7 @@ namespace WcfService
 
                 int qRoadIdMax;
                 try
+<<<<<<< HEAD
                 {
                     qRoadIdMax = (from road in dc.Roads
                                   select road.RoadID).Max();
@@ -328,6 +441,35 @@ namespace WcfService
                 var qSettlements = from oSettlement in lobbyRoom.TheLobby.Settlements
                                    where oSettlement.RoadId == -1
                                    select oSettlement;
+=======
+                {
+                    qRoadIdMax = (from road in dc.Roads
+                                  select road.RoadID).Max();
+                }
+                catch (Exception)
+                {
+                    ErrorReport("UpdateGame qRoadIdMax catch");
+                    qRoadIdMax = 0;
+                }
+                foreach (var oRoad in qRoads)
+                {
+                    ++qRoadIdMax;
+                    dc.Roads.InsertOnSubmit(new Road
+                        {
+                            ImgUrl = oRoad.ImageUrl,
+                            LobbyID = lobbyRoom.TheLobby.LobbyId,
+                            OwenrID = oRoad.Owner.PlayerId,
+                            PositionX = oRoad.Position.X,
+                            PositionY = oRoad.Position.Y,
+                            PositionX1 = oRoad.Position2.X,
+                            PositionY2 = oRoad.Position2.Y,
+                            ShiftX = oRoad.ShiftX,
+                            ShiftY = oRoad.ShiftY,
+                            RoadID = qRoadIdMax
+                        });
+                }
+                // make new settlements
+>>>>>>> 568ca47... Foto's toegevoegd
                 int qSettlementIdMax;
                 try
                 {
@@ -340,12 +482,23 @@ namespace WcfService
                     qSettlementIdMax = 0;
                 }
 
+<<<<<<< HEAD
+=======
+                var qSettlements = from oSettlement in lobbyRoom.TheLobby.Settlements
+                                   where oSettlement.RoadId == -1
+                                   select oSettlement;
+>>>>>>> 568ca47... Foto's toegevoegd
                 foreach (var oSettlement in qSettlements)
                 {
                     ++qSettlementIdMax;
                     ++qRoadIdMax;
+<<<<<<< HEAD
                     dc.Roads.InsertOnSubmit(new Road() { ImgUrl = oSettlement.ImageUrl, LobbyID = lobbyRoom.TheLobby.LobbyId, OwenrID = oSettlement.Owner.PlayerId, PositionX = oSettlement.Position.X, PositionY = oSettlement.Position.Y, RoadID = qRoadIdMax });
                     dc.Settlements.InsertOnSubmit(new Settlement() { RoadID = qRoadIdMax, Upgraded = oSettlement.Upgraded, SettlementID = qSettlementIdMax });
+=======
+                    dc.Roads.InsertOnSubmit(new Road { ImgUrl = oSettlement.ImageUrl, LobbyID = lobbyRoom.TheLobby.LobbyId, OwenrID = oSettlement.Owner.PlayerId, PositionX = oSettlement.Position.X, PositionY = oSettlement.Position.Y, RoadID = qRoadIdMax });
+                    dc.Settlements.InsertOnSubmit(new Settlement { RoadID = qRoadIdMax, Upgraded = oSettlement.Upgraded, SettlementID = qSettlementIdMax });
+>>>>>>> 568ca47... Foto's toegevoegd
                 }
 
                 //update settlements
@@ -356,6 +509,7 @@ namespace WcfService
 
                 foreach (var settlement in qSettlementsUpdate)
                 {
+<<<<<<< HEAD
                     foreach (var oSettlement in lobbyRoom.TheLobby.Settlements)
                     {
                         if (settlement.RoadID == oSettlement.RoadId)
@@ -364,6 +518,24 @@ namespace WcfService
                         }
                     }
                 }
+=======
+                    foreach (var oSettlement in lobbyRoom.TheLobby.Settlements.Where(oSettlement => settlement.RoadID == oSettlement.RoadId))
+                    {
+                        settlement.Upgraded = oSettlement.Upgraded;
+                    }
+                }
+
+                foreach (var playa in lobbyRoom.PlayerList)
+                {
+                    //UpdatePlayer(playa);
+                }
+
+                var lobb = (from lob in dc.Lobbies
+                            where lob.LobbyId == lobbyRoom.TheLobby.LobbyId
+                            select lob).First();
+                lobb.DiceRollllllllllllllllllllol = lobbyRoom.TheLobby.DiceNum;
+
+>>>>>>> 568ca47... Foto's toegevoegd
                 dc.SubmitChanges();
             }
             catch (Exception e)
@@ -377,7 +549,11 @@ namespace WcfService
             int maxId = (from error in dc.Errors
                          select error.Id).Max();
 
+<<<<<<< HEAD
             dc.Errors.InsertOnSubmit(new Error() { Id = ++maxId, Mesg = msg });
+=======
+            dc.Errors.InsertOnSubmit(new Error { Id = ++maxId, Mesg = msg });
+>>>>>>> 568ca47... Foto's toegevoegd
             dc.SubmitChanges();
         }
     }

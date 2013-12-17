@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Windows;
@@ -43,6 +44,7 @@ namespace PhoneApp.Views
 
         private void LobbyCreateNewBtn_Click(object sender, RoutedEventArgs e)
         {
+            LobbyCreateNewBtn.IsEnabled = false;
             vm.CreateLobby();
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
@@ -27,5 +28,7 @@ namespace WcfService.DTO
         public int Wheat { get; set; }
         [DataMember]
         public int Brick { get; set; }
+        [DataMember]
+        public int VictoryPoints { get; set; }
     }
 }

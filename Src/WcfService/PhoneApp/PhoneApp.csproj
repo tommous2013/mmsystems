@@ -76,6 +76,9 @@
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\WaitingPageViewModel.cs" />
+    <Compile Include="Views\EndPage.xaml.cs">
+      <DependentUpon>EndPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ErrorPage.xaml.cs">
       <DependentUpon>ErrorPage.xaml</DependentUpon>
     </Compile>
@@ -101,6 +104,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="Views\EndPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ErrorPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -129,6 +136,12 @@
   <ItemGroup>
     <None Include="Properties\AppManifest.xml" />
     <None Include="Properties\WMAppManifest.xml" />
+    <Content Include="Images\Dice\1.png" />
+    <Content Include="Images\Dice\2.png" />
+    <Content Include="Images\Dice\3.png" />
+    <Content Include="Images\Dice\4.png" />
+    <Content Include="Images\Dice\5.png" />
+    <Content Include="Images\Dice\6.png" />
     <Content Include="Images\logo.png" />
     <None Include="Service References\ServiceReference\PhoneApp.ServiceReference.OLobby.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>

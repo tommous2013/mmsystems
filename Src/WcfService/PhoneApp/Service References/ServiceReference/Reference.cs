@@ -34,6 +34,8 @@ namespace PhoneApp.ServiceReference {
         
         private int SheepField;
         
+        private int VictoryPointsField;
+        
         private int WheatField;
         
         private int WoodField;
@@ -125,6 +127,19 @@ namespace PhoneApp.ServiceReference {
                 if ((this.SheepField.Equals(value) != true)) {
                     this.SheepField = value;
                     this.RaisePropertyChanged("Sheep");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int VictoryPoints {
+            get {
+                return this.VictoryPointsField;
+            }
+            set {
+                if ((this.VictoryPointsField.Equals(value) != true)) {
+                    this.VictoryPointsField = value;
+                    this.RaisePropertyChanged("VictoryPoints");
                 }
             }
         }
@@ -232,6 +247,8 @@ namespace PhoneApp.ServiceReference {
         
         private int DiceNumField;
         
+        private bool IsUpdateField;
+        
         private bool IsWaitingForPlayersField;
         
         private int LobbyIdField;
@@ -251,6 +268,19 @@ namespace PhoneApp.ServiceReference {
                 if ((this.DiceNumField.Equals(value) != true)) {
                     this.DiceNumField = value;
                     this.RaisePropertyChanged("DiceNum");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool IsUpdate {
+            get {
+                return this.IsUpdateField;
+            }
+            set {
+                if ((this.IsUpdateField.Equals(value) != true)) {
+                    this.IsUpdateField = value;
+                    this.RaisePropertyChanged("IsUpdate");
                 }
             }
         }
@@ -342,8 +372,19 @@ namespace PhoneApp.ServiceReference {
         
         private PhoneApp.ServiceReference.Point PositionField;
         
+<<<<<<< HEAD
         private int RoadIdField;
         
+=======
+        private PhoneApp.ServiceReference.Point Position2Field;
+        
+        private int RoadIdField;
+        
+        private int ShiftXField;
+        
+        private int ShiftYField;
+        
+>>>>>>> 568ca47... Foto's toegevoegd
         [System.Runtime.Serialization.DataMemberAttribute()]
         public string ImageUrl {
             get {
@@ -384,6 +425,22 @@ namespace PhoneApp.ServiceReference {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+<<<<<<< HEAD
+=======
+        public PhoneApp.ServiceReference.Point Position2 {
+            get {
+                return this.Position2Field;
+            }
+            set {
+                if ((this.Position2Field.Equals(value) != true)) {
+                    this.Position2Field = value;
+                    this.RaisePropertyChanged("Position2");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+>>>>>>> 568ca47... Foto's toegevoegd
         public int RoadId {
             get {
                 return this.RoadIdField;
@@ -396,6 +453,35 @@ namespace PhoneApp.ServiceReference {
             }
         }
         
+<<<<<<< HEAD
+=======
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int ShiftX {
+            get {
+                return this.ShiftXField;
+            }
+            set {
+                if ((this.ShiftXField.Equals(value) != true)) {
+                    this.ShiftXField = value;
+                    this.RaisePropertyChanged("ShiftX");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int ShiftY {
+            get {
+                return this.ShiftYField;
+            }
+            set {
+                if ((this.ShiftYField.Equals(value) != true)) {
+                    this.ShiftYField = value;
+                    this.RaisePropertyChanged("ShiftY");
+                }
+            }
+        }
+        
+>>>>>>> 568ca47... Foto's toegevoegd
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         protected void RaisePropertyChanged(string propertyName) {
